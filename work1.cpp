@@ -73,7 +73,7 @@ void task5() {
 
 // 2 ДЗ: от 6 до 10
 void task6() {
-    float h, R, r, l, V, S;
+    double h, R, r, l, V, S;
     cout << "Ввод h, R, r" << endl;
     cin >> h >> R >> r;
     l = sqrt(h * h + (R - r) * (R - r));
@@ -150,7 +150,8 @@ void task11() {
 // Бинарный поиск с точностью до 0.001
 // Используется функция и возвратом m для вычисления на каждой итерации
 void task12() {
-    float S, n, p = 0;
+    float S, p = 0;
+    int n;
     double m, m_temp, step = 0.001, adj = 1 / step;
     cout << "Ввод S, m, n" << endl;
     cin >> S >> m >> n;
@@ -178,7 +179,8 @@ void task12() {
 // Обработчик для задачи "фильтр" - проверка на числовой тип строки
 void task14_helper(string line) {
     int dig;
-    for (int i = 0; i < line.length(); i++) {
+    int len = line.length();
+    for (int i = 0; i < len; i++) {
         dig = line[i];
         if (dig) cout << dig;
     }
@@ -261,11 +263,11 @@ void task16() {
 
 // Функция-обработчик, задача "Знак"
 int sign(float x) {
-    int x;
-    if (x > 0) x = 1;
-    else if (x < 0) x = -1;
-    else x = 0;
-    return x;
+    int res;
+    if (x > 0) res = 1;
+    else if (x < 0) res = -1;
+    else res = 0;
+    return res;
 }
 
 void task17() {
@@ -308,13 +310,13 @@ int main()
     setlocale(LC_ALL, "rus");
 
     // 1 ДЗ
-    /*
+    ///*
     task1();
     task2();
     task3();
     task4();
     task5();
-    */
+    //*/
 
     // 2 ДЗ
     /*
@@ -335,10 +337,11 @@ int main()
     */
 
     // 4 ДЗ
+    /*
     task16();
     task17();
     task19();
-
+    */
 
     return 0;
 }
@@ -353,4 +356,3 @@ int main()
 //   4. В окне "Список ошибок" можно просматривать ошибки.
 //   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
 //   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
-
