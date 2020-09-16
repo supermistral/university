@@ -113,9 +113,6 @@ void task21() {
     cout << "Ввод римского числа" << endl;
     cin >> input;
     len = input.length();
-    //for (i = 0; i < len; i++) {
-    //    input += inputUser[len - i - 1];
-    //}
     i = len - 1;
 
     while (i >= 0) {
