@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+using namespace std;
 
 // Обработчик для задач Заем и Ссуда
 // функция с возвратом m
