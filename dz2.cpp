@@ -1,6 +1,7 @@
 #define _USE_MATH_DEFINES
 #include <iostream>
 #include <math.h>
+using namespace std;
 
 void task6() {
     double h, R, r, l, V, S;
