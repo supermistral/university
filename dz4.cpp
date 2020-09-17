@@ -7,22 +7,26 @@
 #include <map>
 using namespace std;
 
-void open(string file) {
+float open(string file) {
+    float sum = 0;
     ifstream in(file);
+
     if (in.is_open()) {
         string line;
 
         while (getline(in, line)) {
             cout << line << endl;
+            sum += stof(line);
         }
     }
     in.close();
+    return sum;
 }
 
 void task16() {
     string file = "";  // Путь к файлу
     const int len = 10;
-    int arr[len];
+    float arr[len];
     ofstream out;
 
     for (int i = 0; i < len; i++) {
@@ -38,7 +42,7 @@ void task16() {
     }
     out.close();
 
-    open(file);
+    cout << "Сумма = " << open(file) << endl;;
 }
 
 // Функция-обработчик, задача "Знак"
@@ -58,21 +62,27 @@ void task17() {
 }
 
 // Функции для вычисления площадей (задача "Геом. фигуры")
-float rectangle(float x, float y) {
+double rectangle(float x, float y) {
     return x * y;
 }
 
-float triangle(float x, float y, float z) {
+double triangle(float x, float y, float z) {
     float p = (x + y + z) / 2;
     return sqrt(p * (p - x) * (p - y) * (p - z));
 }
 
-float circle(float r) {
+double circle(float r) {
     return M_PI * r * r;
 }
 
 void task18() {
-    
+    float x, y, z;
+    cout << "Ввод сторон прямоугольника" << endl; cin >> x >> y;
+    cout << rectangle(x, y) << endl;
+    cout << "Ввод сторон треугольника" << endl; cin >> x >> y >> z;
+    cout << triangle(x, y, z) << endl;
+    cout << "Ввод радиуса круга" << endl; cin >> x;
+    cout << circle(x) << endl;
 }
 
 void task19() {
@@ -86,7 +96,7 @@ void task19() {
 }
 
 void task20() {
-    int startPos = 100;
+    int startPos = 100, scaleX = 10, scaleY = -20;
     HDC window = GetDC(GetConsoleWindow());
     HPEN obj = CreatePen(PS_SOLID, 2, RGB(255, 255, 255));
     SelectObject(window, obj);
@@ -96,33 +106,33 @@ void task20() {
     MoveToEx(window, startPos, 0, NULL);
     LineTo(window, startPos, startPos * 2);
 
-    for (float x = -8.0; x <= 8.0; x += 0.01) {
-        MoveToEx(window, 10 * x + startPos, -10 * sin(x) + startPos, NULL); //10 - scale
-        LineTo(window, 10 * x + startPos, -10 * sin(x) + startPos);
+    for (float x = -10; x <= 10; x += 0.01f) {
+        MoveToEx(window, x * scaleX + startPos, sin(x) * scaleY + startPos, NULL);
+        LineTo(window, x * scaleX + startPos, sin(x) * scaleY + startPos);
     }
 }
 
 void task21() {
     map <string, int> dig = {
         {"I", 1}, {"V", 5}, {"X", 10}, {"IV", 4 }, {"IX", 9},
-        {"L", 50}, {"XL", 40}, {"C", 100}, {"XC", 90}, {"D", 500}, 
+        {"L", 50}, {"XL", 40}, {"C", 100}, {"XC", 90}, {"D", 500},
         {"CD", 400}, {"M", 1000}, {"CM", 900}
     };
-    string inputUser, temp = "", input;
+    string input, temp = "";
     int len, i, result = 0;
     cout << "Ввод римского числа" << endl;
     cin >> input;
-    len = input.length();
+    len = input.size();
     i = len - 1;
 
     while (i >= 0) {
-        if (i > 0) temp = string(1, input[i - 1]) + string(1, input[i]);
+        if (i > 0) temp = input.substr(i - 1, 2);
         if (i > 0 && dig[temp]) {
             result += dig[temp];
             i -= 2;
         }
         else {
-            result += dig[string(1, input[i])];
+            result += dig[input.substr(i, 1)];
             i -= 1;
         }
     }
@@ -133,7 +143,7 @@ void task22() {
     int m, i, c, s = 1, start = 1, end = 100;
     cout << "Ввод m, i, c" << endl;
     cin >> m >> i >> c;
-    
+
     for (int i = start; i <= end; i++) {
         s = (m * s + i) % c;
         cout << s << endl;
@@ -170,7 +180,7 @@ void task23() {
 string convert(int num, int base) {
     int currentNum, scale1 = 55, scale2 = 48;
     string newNum = "";
-    
+
     while (num > 0) {
         currentNum = num % base;
         if (currentNum > 9) {
@@ -219,7 +229,7 @@ int main()
 
     task16();
     task17();
-    //task(18);
+    task18();
     task19();
     task20();
     task21();
