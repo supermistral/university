@@ -7,7 +7,7 @@ using namespace std;
 // функция с возвратом m
 double task11_helper(float S, float p, int n) {
     float r = p / 100;
-    float temp = pow(1 + r, n);
+    double temp = pow(1 + r, n);
     return S * r * temp / (12 * (temp - 1));
 }
 
@@ -19,31 +19,23 @@ void task11() {
     cout << task11_helper(S, p, n) << endl;
 }
 
-// Бинарный поиск с точностью до 0.001
-// Используется функция и возвратом m для вычисления на каждой итерации
+// Перебор целых значений процентов от 1 до 100
 void task12() {
-    float S, p = 0;
-    int n;
-    double m, m_temp, step = 0.001, adj = 1 / step;
+    float S;
+    int n, p = 0;
+    double m;
     cout << "Ввод S, m, n" << endl;
     cin >> S >> m >> n;
-    float mid, high = 100, low = 0;
 
-    while (low < high) {
-        mid = (high + low) / 2;
-        m_temp = task11_helper(S, mid, n);
-           
-        // Без округления не сравнить дробные числа. При этом нужна корректировка для round
-        if (round(m_temp * adj) > round(m * adj)) high = mid - step;
-        else if (round(m_temp * adj) < round(m * adj)) low = mid + step;
-        else {
-            p = mid;
+    for (int i = 1; i <= 100; i++) {
+        if (task11_helper(S, i, n) == m) {
+            p = i;
             break;
         }
     }
 
     if (p) cout << p;
-    else cout << "Не удалось определить p";
+    else cout << "Не удалось определить целое p";
     cout << endl;
 }
 
@@ -51,7 +43,7 @@ void task12() {
 // Обработчик для задачи "фильтр" - проверка на числовой тип строки
 void task14_helper(string line) {
     int dig;
-    int len = line.length();
+    int len = line.size();
     for (int i = 0; i < len; i++) {
         dig = line[i];
         if (dig) cout << dig;
@@ -88,27 +80,23 @@ void task14() {
 // сортировка пузырьком
 void task15() {
     const int length = 30;
-    char line[length];
     string userLine;
     cout << "Ввод строки" << endl;
     cin >> userLine;
+    userLine.resize(length);
+    cout << "Ваша строка - " << userLine << endl;
 
-    for (int i = 0; i < length; i++) {
-        line[i] = userLine[i];
-    }
-    cout << "Ваша строка - " << line << endl;
-
+    char k;
     for (int i = 0; i < length - 1; i++) {
-        for (int j = i; j < length - 1 - i; j++) {
-            if (line[j] > line[j + 1]) {
-                char k = line[j];
-                line[j] = line[j + 1];
-                line[j + 1] = k;
+        for (int j = 0; j < length - 1 - i; j++) {
+            if (userLine[j] > userLine[j + 1]) {
+                k = userLine[j];
+                userLine[j] = userLine[j + 1];
+                userLine[j + 1] = k;
             }
         }
     }
-
-    for (int i = 0; i < length; i++) cout << line[i];
+    cout << userLine << endl;
 }
 
 int main()
