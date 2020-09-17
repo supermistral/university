@@ -8,7 +8,7 @@ void task6() {
     cout << "Ввод h, R, r" << endl;
     cin >> h >> R >> r;
     l = sqrt(h * h + (R - r) * (R - r));
-    V = 1 / 3 * M_PI * h * (R * R + R * r + r * r);
+    V = M_PI * h / 3 * (R * R + R * r + r * r);
     S = M_PI * (R * R + l * (R + r) + r * r);
     cout << V << endl << S << endl;
 }
@@ -19,8 +19,8 @@ void task7() {
     cin >> a >> x;
     x = abs(x);
 
-    if (x < 1 && abs(a) >= x) {
-        res = sqrt(a * a - x * x);
+    if (x >= 1 && a >= x * x) {
+        res = sqrt(a - x * x);
     }
     else if (x) {
         res = a * log(x);
@@ -37,7 +37,12 @@ void task8() {
     float x, y, b;
     cout << "Ввод x, y, b" << endl;
     cin >> x >> y >> b;
-    cout << log(b - y) * sqrt(b - x) << endl;
+    if ((b - y) > 0 && (b - x) >= 0) {
+        cout << log(b - y) * sqrt(b - x) << endl;
+    }
+    else {
+        cout << "Нет решений" << endl;
+    }
 }
 
 void task9() {
