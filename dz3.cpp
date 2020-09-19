@@ -5,22 +5,22 @@ using namespace std;
 
 // Обработчик для задач Заем и Ссуда
 // функция с возвратом m
-double task11_helper(float S, float p, int n) {
+double task1_helper(float S, float p, int n) {
     float r = p / 100;
     double temp = pow(1 + r, n);
     return S * r * temp / (12 * (temp - 1));
 }
 
-void task11() {
+void task1() {
     float S, p;
     int n;
     cout << "Ввод S, p, n" << endl;
     cin >> S >> p >> n;
-    cout << task11_helper(S, p, n) << endl;
+    cout << task1_helper(S, p, n) << endl;
 }
 
 // Перебор целых значений процентов от 1 до 100
-void task12() {
+void task2() {
     float S;
     int n, p = 0;
     double m;
@@ -28,7 +28,7 @@ void task12() {
     cin >> S >> m >> n;
 
     for (int i = 1; i <= 100; i++) {
-        if (task11_helper(S, i, n) == m) {
+        if (task1_helper(S, i, n) == m) {
             p = i;
             break;
         }
@@ -41,7 +41,7 @@ void task12() {
 
 // Задачи "Копирование файла" и "фильтр" - одно и то же
 // Обработчик для задачи "фильтр" - проверка на числовой тип строки
-void task14_helper(string line) {
+void task4_helper(string line) {
     int dig;
     int len = line.size();
     for (int i = 0; i < len; i++) {
@@ -59,7 +59,7 @@ void open(bool cond = false, string file = "") {  // Путь к файлу
         string line;
 
         while (getline(in, line)) {
-            if (cond) task14_helper(line);
+            if (cond) task4_helper(line);
             else cout << line;
             cout << endl;
         }
@@ -67,18 +67,18 @@ void open(bool cond = false, string file = "") {  // Путь к файлу
     in.close();
 }
 
-void task13() {
+void task3() {
     open();
 }
 
 // Вызов открытия файла - предыдущей задачи с аргументом для вызова хелпера
-void task14() {
+void task4() {
     open(true);
 }
 
 // Можно ввести сколь угодно много символов - используются первые 30
 // сортировка пузырьком
-void task15() {
+void task5() {
     const int length = 30;
     string userLine;
     cout << "Ввод строки" << endl;
@@ -103,10 +103,10 @@ int main()
 {
     setlocale(LC_ALL, "rus");
 
-    task11();
-    task12();
-    task13();
-    task14();
-    task15();
+    task1();
+    task2();
+    task3();
+    task4();
+    task5();
     return 0;
 }
