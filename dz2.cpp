@@ -22,7 +22,7 @@ void task2() {
     float a, x, res;
     cout << "Ввод a, x" << endl;
     cin >> a >> x;
-    x = abs(x);
+    x = fabs(x);
 
     if (x >= 1 && a >= x * x) {
         res = sqrt(a - x * x);
@@ -54,8 +54,10 @@ void task4() {
     int n;
     cout << "Ввод N" << endl;
     cin >> n;
-    for (int i = 0; i < 10; i++) {
-        cout << n + i << endl;
+    if (n > 0) {
+        for (int i = 0; i < 10; i++) {
+            cout << n + i + 1 << endl;
+        }
     }
 }
 
