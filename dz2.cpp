@@ -8,9 +8,14 @@ void task1() {
     cout << "Ввод h, R, r" << endl;
     cin >> h >> R >> r;
     l = sqrt(h * h + (R - r) * (R - r));
-    V = M_PI * h / 3 * (R * R + R * r + r * r);
-    S = M_PI * (R * R + l * (R + r) + r * r);
-    cout << V << endl << S << endl;
+    if (h && R && r) {
+        V = M_PI * h / 3 * (R * R + R * r + r * r);
+        S = M_PI * (R * R + l * (R + r) + r * r);
+        cout << V << endl << S << endl;
+    }
+    else {
+        cout << "Невозможно опеределить объем и площадь" << endl;
+    }
 }
 
 void task2() {
