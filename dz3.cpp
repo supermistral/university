@@ -28,7 +28,7 @@ void task2() {
     cin >> S >> m >> n;
 
     for (int i = 1; i <= 100; i++) {
-        if (task1_helper(S, i, n) == m) {
+        if (round(task1_helper(S, i, n) * 100) == round(m)) {
             p = i;
             break;
         }
