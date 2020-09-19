@@ -3,7 +3,7 @@
 #include <math.h>
 using namespace std;
 
-void task6() {
+void task1() {
     double h, R, r, l, V, S;
     cout << "Ввод h, R, r" << endl;
     cin >> h >> R >> r;
@@ -13,7 +13,7 @@ void task6() {
     cout << V << endl << S << endl;
 }
 
-void task7() {
+void task2() {
     float a, x, res;
     cout << "Ввод a, x" << endl;
     cin >> a >> x;
@@ -33,7 +33,7 @@ void task7() {
 
 }
 
-void task8() {
+void task3() {
     float x, y, b;
     cout << "Ввод x, y, b" << endl;
     cin >> x >> y >> b;
@@ -45,7 +45,7 @@ void task8() {
     }
 }
 
-void task9() {
+void task4() {
     int n;
     cout << "Ввод N" << endl;
     cin >> n;
@@ -56,7 +56,7 @@ void task9() {
 
 // Обработчик для "Табуляции"
 // Функция, вызываемая на каждой итерации
-void task10_helper(float x) {
+void task5_helper(float x) {
     string result;
     if (x - 1 != 0) {
         cout << x * x - 2 * x + 2 / (x - 1) << endl;
@@ -64,11 +64,11 @@ void task10_helper(float x) {
     else cout << "Невозможно вычислить" << endl;
 }
 
-void task10() {
+void task5() {
     float x = 4;
     for (float i = -4; i <= 4; i += 0.5) {
         cout << i << ") ";
-        task10_helper(i);
+        task5_helper(i);
     }
 }
 
@@ -76,10 +76,10 @@ int main()
 {
     setlocale(LC_ALL, "rus");
 
-    task6();
-    task7();
-    task8();
-    task9();
-    task10();
+    task1();
+    task2();
+    task3();
+    task4();
+    task5();
     return 0;
 }
