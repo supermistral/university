@@ -69,7 +69,6 @@ void task5_helper(float x) {
 }
 
 void task5() {
-    float x = 4;
     for (float i = -4; i <= 4; i += 0.5) {
         cout << i << ") ";
         task5_helper(i);
