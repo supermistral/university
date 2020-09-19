@@ -4,13 +4,13 @@
 using namespace std;
 
 void task1() {
-    double h, R, r, l, V, S;
+    double h, R, r;
     cout << "Ввод h, R, r" << endl;
     cin >> h >> R >> r;
-    l = sqrt(h * h + (R - r) * (R - r));
-    if (h && R && r) {
-        V = M_PI * h / 3 * (R * R + R * r + r * r);
-        S = M_PI * (R * R + l * (R + r) + r * r);
+    if (h > 0 && R > 0 && r > 0) {
+        double l = sqrt(h * h + (R - r) * (R - r));
+        double V = M_PI * h / 3 * (R * R + R * r + r * r);
+        double S = M_PI * (R * R + l * (R + r) + r * r);
         cout << V << endl << S << endl;
     }
     else {
