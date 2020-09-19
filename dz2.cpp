@@ -62,7 +62,6 @@ void task4() {
 // Обработчик для "Табуляции"
 // Функция, вызываемая на каждой итерации
 void task5_helper(float x) {
-    string result;
     if (x - 1 != 0) {
         cout << x * x - 2 * x + 2 / (x - 1) << endl;
     }
