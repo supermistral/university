@@ -19,7 +19,8 @@ void task1() {
 }
 
 void task2() {
-    float a, x, res;
+    float a, x;
+    double res;
     cout << "Ввод a, x" << endl;
     cin >> a >> x;
     x = fabs(x);
