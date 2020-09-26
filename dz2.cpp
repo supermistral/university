@@ -4,7 +4,7 @@
 using namespace std;
 
 void task1() {
-    double h, R, r;
+    float h, R, r;
     cout << "Ввод h, R, r" << endl;
     cin >> h >> R >> r;
     if (h > 0 && R > 0 && r > 0) {
