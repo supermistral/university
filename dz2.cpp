@@ -11,7 +11,7 @@ void task1() {
         double l = sqrt(h * h + (R - r) * (R - r));
         double V = M_PI * h / 3 * (R * R + R * r + r * r);
         double S = M_PI * (R * R + l * (R + r) + r * r);
-        cout << V << endl << S << endl;
+        cout << "V = " << V << endl << "S = " << S << endl;
     }
     else {
         cout << "Невозможно опеределить объем и площадь" << endl;
@@ -76,7 +76,7 @@ void task5_helper(float x) {
 
 void task5() {
     for (float i = -4; i <= 4; i += 0.5) {
-        cout << i << ") ";
+        cout << "x = " << i << "y = ";
         task5_helper(i);
     }
 }
