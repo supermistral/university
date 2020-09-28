@@ -7,8 +7,7 @@ using namespace std;
 // функция с возвратом m
 double task1_helper(float S, float p, int n) {
     float r = p / 100;
-    double temp = pow(1 + r, n);
-    return S * r * temp / (12 * (temp - 1));
+    return S * r * pow(1 + r, n) / (12 * (pow(1 + r, n) - 1));
 }
 
 void task1() {
@@ -16,37 +15,44 @@ void task1() {
     int n;
     cout << "Ввод S, p, n" << endl;
     cin >> S >> p >> n;
-    cout << task1_helper(S, p, n) << endl;
+    if (S <= 0 || p <= 0 || n <= 0) {
+        cout << "Параметры должны быть положительными" << endl;
+        return;
+    }
+
+    cout << "m = " << task1_helper(S, p, n) << endl;
 }
 
-// Перебор целых значений процентов от 1 до 100
+// Перебор целых значений процентов от 0 до 100
 void task2() {
     float S;
-    int n, p = 0;
+    int n, p;
     double m;
     cout << "Ввод S, m, n" << endl;
     cin >> S >> m >> n;
-
-    for (int i = 1; i <= 100; i++) {
-        if (round(task1_helper(S, i, n) * 100) == round(m * 100)) {
-            p = i;
-            break;
-        }
+    if (S <= 0 || m <= 0 || n <= 0) {
+        cout << "Параметры должны быть положительными" << endl;
+        return;
     }
 
-    if (p) cout << p;
-    else cout << "Не удалось определить целое p";
-    cout << endl;
+    int diff = -1;
+    for (int i = 0; i <= 100; i++) {
+        if ((fabs(task1_helper(S, i, n) - m) < diff) || (diff < 0)) {
+            p = i;
+            diff = task1_helper(S, i, n) - m;
+        }
+    }
+    cout << "p = " << p << endl;
 }
 
 // Задачи "Копирование файла" и "фильтр" - одно и то же
 // Обработчик для задачи "фильтр" - проверка на числовой тип строки
 void task4_helper(string line) {
-    int dig;
     int len = line.size();
     for (int i = 0; i < len; i++) {
-        dig = line[i];
-        if (dig) cout << dig;
+        if (isdigit(line[i]) || line[i] == ' ') {
+            cout << line[i];
+        }
     }
 }
 
@@ -58,9 +64,14 @@ void open(bool cond = false, string file = "") {  // Путь к файлу
     if (in.is_open()) {
         string line;
 
-        while (getline(in, line)) {
-            if (cond) task4_helper(line);
-            else cout << line;
+        while (!in.eof()) {
+            getline(in, line);
+            if (cond) {
+                task4_helper(line);
+            }
+            else {
+                cout << line;
+            }
             cout << endl;
         }
     }
@@ -83,8 +94,12 @@ void task5() {
     string userLine;
     cout << "Ввод строки" << endl;
     cin >> userLine;
+    if (userLine.size() < 30) {
+        cout << "Строка должна содержать не менее 30 символов" << endl;
+        return;
+    }
     userLine.resize(length);
-    cout << "Ваша строка - " << userLine << endl;
+    cout << "Используемая строка - " << userLine << endl;
 
     char k;
     for (int i = 0; i < length - 1; i++) {
@@ -103,10 +118,10 @@ int main()
 {
     setlocale(LC_ALL, "rus");
 
-    task1();
+    //task1();
     task2();
-    task3();
-    task4();
-    task5();
+    //task3();
+    //task4();
+    //task5();
     return 0;
 }
