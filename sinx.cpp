@@ -3,7 +3,6 @@
 using namespace std;
 
 double f(double x) {
-    cout << x << " " << sin(x) << endl;
     return sin(x);
 }
 
