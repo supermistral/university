@@ -10,6 +10,7 @@ double f(double x) {
 int main()
 {
     const int n = 27, m = 101, half_n = n / 2, half_m = m / 2;
+    double scale = 7.0;
     char coords[n][m];
 
     for (int i = 0; i < n; i++) {
@@ -28,7 +29,7 @@ int main()
 
     int posy;
     for (int i = -half_m; i < half_m; i++) {
-        posy = round(half_n - half_n * f(i / 7.0));
+        posy = round(half_n - half_n * f(i / scale));
         coords[posy][i + half_m] = '*';
     }
 
