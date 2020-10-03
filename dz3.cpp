@@ -67,6 +67,7 @@ void task4_helper(string line) {
 void open(bool cond = false, string file = "C:\\Users\\IVC1-5\\Desktop\\test.txt") {  // Путь к файлу
     ifstream in(file);
     if (in.is_open()) {
+        cout << "Содержимое файла:" << endl;
         string line;
 
         while (!in.eof()) {
@@ -84,17 +85,19 @@ void open(bool cond = false, string file = "C:\\Users\\IVC1-5\\Desktop\\test.txt
 }
 
 void task3() {
-    string file = "";
+    string file = "C:\\Users\\IVC1-5\\Desktop\\test.txt";
     ofstream out(file);
 
     if (out.is_open()) {
+        cout << "Заполните файл содержимым. Конец заполнения - '0'" << endl;
         string line;
-        while (line != "0") {
-            cin >> line;
+        do {
+            getline(cin, line);
             out << line << endl;
-        }
+        } while (line != "0");
     }
     out.close();
+    cout << endl;
 
     open();
 }
@@ -139,8 +142,8 @@ int main()
 
     //task1();
     //task2();
-    //task3();
+    task3();
     //task4();
-    task5();
+    //task5();
     return 0;
 }
