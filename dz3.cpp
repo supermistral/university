@@ -1,101 +1,146 @@
-#define _USE_MATH_DEFINES
 #include <iostream>
-#include <math.h>
+#include <fstream>
+#include <string>
 using namespace std;
 
-void task1() {
-    float h, R, r;
-    cout << "Введите h -> ";  cin >> h;
-    cout << "Введите R -> ";  cin >> R;
-    cout << "Введите r -> ";  cin >> r;
+// Обработчик для задач Заем и Ссуда
+// функция с возвратом m
+double task1_helper(float S, float p, int n) {
+    float r = p / 100;
+    return S * r * pow(1 + r, n) / (12 * (pow(1 + r, n) - 1));
+}
 
-    if (h > 0 && R > 0 && r > 0) {
-        if (R < r) {
-            cout << "Конус перевернутый" << endl;
-            return;
-        }
-        double l = sqrt(h * h + (R - r) * (R - r));
-        cout << "V = " << M_PI * h * 1.0 / 3.0 * (R * R + R * r + r * r) << endl;
-        cout << "S = " << M_PI * (R * R + l * (R + r) + r * r) << endl;
+void task1() {
+    float S, p;
+    int n;
+    cout << "Ввод S, p, n" << endl;
+    cin >> S >> p >> n;
+    if (S <= 0 || p <= 0 || n <= 0) {
+        cout << "Параметры должны быть положительными" << endl;
+        return;
     }
-    else {
-        cout << "Невозможно опеределить объем и площадь" << endl;
+
+    cout << "m = " << task1_helper(S, p, n) << endl;
+}
+
+// Перебор целых значений процентов от 0 до 100
+void task2() {
+    float S;
+    int n, p;
+    double m;
+    cout << "Ввод S, m, n" << endl;
+    cin >> S >> m >> n;
+    if (S <= 0 || m <= 0 || n <= 0) {
+        cout << "Параметры должны быть положительными" << endl;
+        return;
+    }
+
+    int diff = -1;
+    for (int i = 0; i <= 100; i++) {
+        if ((fabs(task1_helper(S, i, n) - m) < diff) || (diff < 0)) {
+            p = i;
+            diff = task1_helper(S, i, n) - m;
+        }
+    }
+
+    if (diff <= 0.1) {
+        cout << "p = " << p << endl;
+        return;
+    }
+    cout << "При введенных данных слишком большая погрешность p" << endl;
+}
+
+// Задачи "Копирование файла" и "фильтр" - одно и то же
+// Обработчик для задачи "фильтр" - проверка на числовой тип строки
+void task4_helper(string line) {
+    int len = line.size();
+    for (int i = 0; i < len; i++) {
+        if (isdigit(line[i]) || line[i] == ' ') {
+            cout << line[i];
+        }
     }
 }
 
-void task2() {
-    float a, x;
-    double res;
-    cout << "Введите a -> ";  cin >> a;
-    cout << "Введите x -> ";  cin >> x;
-    x = fabs(x);
+// Открытие файла и вывод содержимого, требуется в рамках обоих задач
+// Аргумент для удобства - чтобы не повторять код в другой задаче и
+// вызывать функцию выше, когда нужно
+void open(bool cond = false, string file = "C:\\Users\\IVC1-5\\Desktop\\test.txt") {  // Путь к файлу
+    ifstream in(file);
+    if (in.is_open()) {
+        string line;
 
-    if (x >= 1 && a >= x * x) {
-        res = sqrt(a - x * x);
+        while (!in.eof()) {
+            getline(in, line);
+            if (cond) {
+                task4_helper(line);
+            }
+            else {
+                cout << line;
+            }
+            cout << endl;
+        }
     }
-    else if (x < 1 && x != 0) {
-        res = a * log(x);
-    }
-    else {
-        cout << "Нет решений" << endl;
-        return;
-    }
-    cout << res << endl;
-
+    in.close();
 }
 
 void task3() {
-    float x, y, b;
-    cout << "Введите x -> ";  cin >> x;
-    cout << "Введите y -> ";  cin >> y;
-    cout << "Введите b -> ";  cin >> b;
+    string file = "";
+    ofstream out(file);
 
-    if ((b - y) > 0 && (b - x) >= 0) {
-        cout << log(b - y) * sqrt(b - x) << endl;
-    }
-    else {
-        cout << "Нет решений" << endl;
-    }
-}
-
-void task4() {
-    float n;
-    cout << "Введите N -> ";  cin >> n;
-
-    if (n > 0 && (int(n) - n) == 0) {
-        for (int i = 0; i < 10; i++) {
-            cout << n + i + 1 << endl;
+    if (out.is_open()) {
+        string line;
+        while (line != "0") {
+            cin >> line;
+            out << line << endl;
         }
     }
-    else {
-        cout << "Число не натуральное" << endl;
-    }
+    out.close();
+
+    open();
 }
 
-// Обработчик для "Табуляции"
-// Функция, вызываемая на каждой итерации
-void task5_helper(float x) {
-    if (x - 1 != 0) {
-        cout << "y = " << x * x - 2 * x + 2 / (x - 1) << endl;
-    }
-    else cout << "Невозможно вычислить" << endl;
+// Вызов открытия файла - предыдущей задачи с аргументом для вызова хелпера
+void task4() {
+    open(true);
 }
 
+// Можно ввести сколь угодно много символов - используются первые 30
+// сортировка пузырьком
 void task5() {
-    for (int i = -4; i <= 4; i += 2) {
-        cout << "x = " << i << " -> ";
-        task5_helper(i);
+    const int length = 30;
+    string userLine;
+    cout << "Ввод строки" << endl;
+    cin >> userLine;
+
+    if (userLine.size() < 30) {
+        cout << userLine.size() << endl;
+        cout << "Строка должна содержать не менее 30 символов" << endl;
+        return;
     }
+    userLine.resize(length);
+    cout << "Используемая строка - " << userLine << endl;
+
+    char k;
+    for (int i = 0; i < length - 1; i++) {
+        for (int j = 0; j < length - 1 - i; j++) {
+            if (userLine[j] > userLine[j + 1]) {
+                k = userLine[j];
+                userLine[j] = userLine[j + 1];
+                userLine[j + 1] = k;
+            }
+        }
+    }
+    cout << userLine << endl;
 }
 
 int main()
 {
     setlocale(LC_ALL, "rus");
 
-    task1();
-    task2();
+    //task1();
+    //task2();
     //task3();
-    task4();
+    //task4();
     task5();
     return 0;
 }
