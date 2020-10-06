@@ -24,6 +24,7 @@ void roman() {
             }
         }
         else {
+            //Чек на вхождение символа в словарь
             if (dig.find(input[i]) == dig.end()) {
                 cout << "Неверная запись римского числа" << endl;
                 return;
