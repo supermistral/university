@@ -39,7 +39,7 @@ void task2() {
     for (int i = 0; i <= 100; i++) {
         if ((fabs(task1_helper(S, i, n) - m) < diff) || (diff < 0)) {
             p = i;
-            diff = task1_helper(S, i, n) - m;
+            diff = fabs(task1_helper(S, i, n) - m);
         }
     }
 
