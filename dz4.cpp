@@ -153,7 +153,7 @@ void task6() {
     cout << result << endl;
 }
 
-double task7_helper(int m, i, c, s) {
+double task7_helper(int m, int i, int c, int s) {
     return (m * s + i) % c;
 }
 
