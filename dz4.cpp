@@ -23,7 +23,7 @@ float open(string file) {
     return sum;
 }
 
-void task16() {
+void task1() {
     string file = "";  // Путь к файлу
     const int len = 10;
     float arr[len];
@@ -54,10 +54,9 @@ int sign(float x) {
     return res;
 }
 
-void task17() {
+void task2() {
     float x;
-    cout << "Ввод x" << endl;
-    cin >> x;
+    cout << "Введите x -> "; cin >> x;
     cout << sign(x) << endl;
 }
 
@@ -75,7 +74,7 @@ double circle(float r) {
     return M_PI * r * r;
 }
 
-void task18() {
+void task3() {
     float x, y, z;
     cout << "Ввод сторон прямоугольника" << endl; cin >> x >> y;
     cout << rectangle(x, y) << endl;
@@ -85,7 +84,7 @@ void task18() {
     cout << circle(x) << endl;
 }
 
-void task19() {
+void task4() {
     string line = "___________________________________________";
     string star = "********___________________________________";
     for (int i = 0; i < 13; i++) {
@@ -95,7 +94,7 @@ void task19() {
     }
 }
 
-void task20() {
+void task5() {
     int startPos = 100, scaleX = 10, scaleY = -20;
     HDC window = GetDC(GetConsoleWindow());
     HPEN obj = CreatePen(PS_SOLID, 2, RGB(255, 255, 255));
@@ -112,7 +111,7 @@ void task20() {
     }
 }
 
-void task21() {
+void task6() {
     map <string, int> dig = {
         {"I", 1}, {"V", 5}, {"X", 10}, {"IV", 4 }, {"IX", 9},
         {"L", 50}, {"XL", 40}, {"C", 100}, {"XC", 90}, {"D", 500},
@@ -139,7 +138,7 @@ void task21() {
     cout << result << endl;
 }
 
-void task22() {
+void task7() {
     int m, i, c, s = 1, start = 1, end = 100;
     cout << "Ввод m, i, c" << endl;
     cin >> m >> i >> c;
@@ -150,7 +149,7 @@ void task22() {
     }
 }
 
-void task23() {
+void task8() {
     const int n = 3, m1 = 4, m2 = 2;
     double prod[n][m1] = {
         {5, 2, 0, 10},
@@ -253,7 +252,7 @@ int convertToTen(string num, int base) {
     return newNum;
 }
 
-void task24() {
+void task9() {
     int oldBase, newBase;
     string userNum, newNum;
     cout << "Ввод числа, основания его системы счисления и основания системы счисления нового числа" << endl;
@@ -263,18 +262,53 @@ void task24() {
     cout << newNum << endl;
 }
 
+boolean handler(char x) {
+    switch (x)
+    {
+    case '1':
+        task1();
+        break;
+    case '2':
+        task2();
+        break;
+    case '3':
+        task3();
+        break;
+    case '4':
+        task4();
+        break;
+    case '5':
+        task5();
+        break;
+    case '6':
+        task6();
+        break;
+    case '7':
+        task7();
+        break;
+    case '8':
+        task8();
+        break;
+    case '9':
+        task9();
+        break;
+    default:
+        return false;
+    }
+    return true;
+}
+
 int main()
 {
     setlocale(LC_ALL, "rus");
+    
+    boolean condition = true;
+    char input;
+    while (condition) {
+        cout << "№ Задания -> "; cin >> input;
+        condition = handler(input);
+        cout << endl;
+    }
 
-    task16();
-    task17();
-    task18();
-    task19();
-    task20();
-    task21();
-    task22();
-    task23();
-    task24();
     return 0;
 }
