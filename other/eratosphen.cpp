@@ -1,30 +1,23 @@
 #include <iostream>
-
 using namespace std;
 
-int eratosphen(int x) {
+void eratosphen(int x) {
+    x += 1;
     int* arr = new int[x];
     for (int i = 0; i < x; i++) {
-        arr[i] = i + 2;
+        arr[i] = i;
     }
 
-    int temp, s;
-    for (int i = 0; i < x; i++) {
-        s = 2;
-        if (arr[i] != 0) {
-            temp = arr[i] * s;
-            while (temp <= arr[x-1]) {
-                arr[temp - 2] = 0;
-                s += 1;
-                temp = arr[i] * s;
+    for (int i = 2; i < x; i++) {
+        if (arr[i]) {
+            for (int j = arr[i] * arr[i]; j < x; j += arr[i]) {
+                arr[j] = 0;
             }
         }
     }
 
-    for (int i = 0; i < x; i++) {
-        if (arr[i] != 0) {
-            cout << arr[i] << endl;
-        }
+    for (int i = 2; i < x; i++) {
+        if (arr[i]) cout << arr[i] << endl;
     }
 }
 
