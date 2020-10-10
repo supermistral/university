@@ -112,39 +112,64 @@ void task5() {
 }
 
 void task6() {
-    map <string, int> dig = {
-        {"I", 1}, {"V", 5}, {"X", 10}, {"IV", 4 }, {"IX", 9},
-        {"L", 50}, {"XL", 40}, {"C", 100}, {"XC", 90}, {"D", 500},
-        {"CD", 400}, {"M", 1000}, {"CM", 900}
+    map <char, int> dig = {
+        {'I', 1}, {'V', 5}, {'X', 10},
+        {'L', 50}, {'C', 100}, {'D', 500},
+        {'M', 1000}
     };
-    string input, temp = "";
-    int len, i, result = 0;
-    cout << "Ввод римского числа" << endl;
-    cin >> input;
-    len = input.size();
-    i = len - 1;
+    string input;
+    int result = 0, counter = 1;
+    cout << "Ввод римского числа -> "; cin >> input;
+    char tempSym = input[0];
+    int len = input.size();
 
-    while (i >= 0) {
-        if (i > 0) temp = input.substr(i - 1, 2);
-        if (i > 0 && dig[temp]) {
-            result += dig[temp];
-            i -= 2;
+    for (int i = 0; i < len - 1; i++) {
+        //Блок проверки на более чем 3 одинаковых цифры подряд
+        if (input[i + 1] == tempSym) {
+            counter++;
+            if (counter > 3) {
+                cout << "Неверная запись римского числа" << endl;
+                return;
+            }
         }
         else {
-            result += dig[input.substr(i, 1)];
-            i -= 1;
+            //Чек на вхождение символа в словарь
+            if (dig.find(input[i]) == dig.end()) {
+                cout << "Неверная запись римского числа" << endl;
+                return;
+            }
+            tempSym = input[i];
+            counter = 1;
+        }
+
+        if (dig[input[i]] < dig[input[i + 1]]) {
+            result -= dig[input[i]];
+        }
+        else {
+            result += dig[input[i]];
         }
     }
+    result += dig[input[len - 1]];
     cout << result << endl;
 }
 
-void task7() {
-    int m, i, c, s = 1, start = 1, end = 100;
-    cout << "Ввод m, i, c" << endl;
-    cin >> m >> i >> c;
+double task7_helper(int m, i, c, s) {
+    return (m * s + i) % c;
+}
 
-    for (int i = start; i <= end; i++) {
-        s = (m * s + i) % c;
+void task7() {
+    int s = 0, start = 0, end = 10;
+    
+    cout << "1 вариант:" << endl;
+    for (int i = start; i < end; i++) {
+        s = task7_helper(37, 3, 64, s);
+        cout << s << endl;
+    }
+    
+    s = 0;
+    cout << "2 вариант:" << endl;
+    for (int i = start; i < end; i++) {
+        s = task7_helper(25173, 13849, 65537, s);
         cout << s << endl;
     }
 }
