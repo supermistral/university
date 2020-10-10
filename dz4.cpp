@@ -150,30 +150,70 @@ void task22() {
     }
 }
 
-// Задать вопрос: цена / наценка 
 void task23() {
-    int prod[3][4] = {
+    const int n = 3, m1 = 4, m2 = 2;
+    double prod[n][m1] = {
         {5, 2, 0, 10},
         {3, 5, 2, 5},
         {20, 0, 0, 0}
     };
-    float seller[4][2] = {
+    double seller[m1][m2] = {
         {1.2, 0.5},
         {2.8, 0.4},
         {5, 1},
         {2, 1.5}
     };
-    float res[3][2], temp;
-    for (int i = 0; i < 3; i++) {
-        for (int k = 0; k < 2; k++) {
-            temp = 0;
-            for (int j = 0; j < 4; j++) {
-                temp += prod[i][j] * seller[j][k];
-            };
-            res[i][k] = temp;
-        };
-    };
+    double res[n][m2], sum1 = 0, sum2 = 0;
 
+    for (int i = 0; i < n; i++) {
+        for (int k = 0; k < m2; k++) {
+            res[i][k] = 0;
+            for (int j = 0; j < m1; j++) {
+                res[i][k] += prod[i][j] * seller[j][k];
+            }
+        }
+    }
+
+    // 1
+    double max = res[0][0], min = res[0][0];
+    int prod1 = 1, prod2 = 1;
+    for (int i = 1; i < n; i++) {
+        if (max < res[i][0]) {
+            max = res[i][0];
+            prod1 = i + 1;
+        }
+        if (min > res[i][0]) {
+            min = res[i][0];
+            prod2 = i + 1;
+        }
+        sum1 += res[i][0];
+    }
+    cout << "Наибольшую выручку имеет " << prod1 << " | Наименьшую вырочку имеет " << prod2 << endl;
+
+    // 2
+    max = res[0][1], min = res[0][1];
+    prod1 = 1, prod2 = 1;
+    for (int i = 1; i < n; i++) {
+        if (max < res[i][1]) {
+            max = res[i][1];
+            prod1 = i + 1;
+        }
+        if (min > res[i][1]) {
+            min = res[i][1];
+            prod2 = i + 1;
+        }
+        sum2 += res[i][1];
+    }
+    cout << "Наибольшие комиссионные имеет " << prod1 << " | Наименьшие комиссионные имеет " << prod2 << endl;
+
+    // 3
+    cout << "Всего выручили " << sum1 << endl;
+
+    // 4
+    cout << "Всего комиссионных " << sum2 << endl;
+
+    // 5
+    cout << "Через руки продавцов прошли " << sum1 + sum2 << endl;
 }
 
 // Перевод в целевую
