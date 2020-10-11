@@ -1,14 +1,6 @@
 #include <iostream>
 using namespace std;
 
-void print(int* a, int n) {
-    for (int i = 0; i < n; i++) {
-        cout.width(3);
-        cout << a[i];
-    }
-    cout << endl;
-}
-
 void swap(int* arr, int i, int j) {
     int k = arr[i];
     arr[i] = arr[j];
@@ -25,7 +17,6 @@ bool check(int* arr, int n) {
 int perm(int* arr, int n, int start) {
     int sum = 0;
     if (start == n) {
-        //print(arr, n);
         if (check(arr, n)) {
             return 1;
         }
