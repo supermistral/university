@@ -2,7 +2,7 @@
 using namespace std;
 
 void eratosphen(int x) {
-    x += 1;
+    x++;
     int* arr = new int[x];
     for (int i = 0; i < x; i++) {
         arr[i] = i;
