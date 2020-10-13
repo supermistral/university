@@ -21,7 +21,7 @@ void eratosphen(long x) {
     cout << "fill " << (double)t1 / ((double)CLOCKS_PER_SEC) << endl;
 
     clock_t t2 = clock();
-    for (long i = 2; i * i <= x; i++) {
+    for (long i = 3; i * i <= x; i++) {
         if (arr[i]) {
             for (long j = i * i; j <= x; j += i) {
                 arr[j] = false;
