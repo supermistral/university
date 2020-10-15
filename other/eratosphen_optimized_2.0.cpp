@@ -29,6 +29,7 @@ void eratosphen(long long x) {
             cout << i * 2 + 1 << endl;
         }
     }*/
+    delete[] arr;
 }
 
 int main()
