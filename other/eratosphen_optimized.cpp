@@ -3,7 +3,6 @@
 using namespace std;
 
 void eratosphen(long long x) {
-    x++;
     bool* arr = new bool[x];
     arr[0] = arr[1] = false;
     arr[2] = true;
