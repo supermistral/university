@@ -34,6 +34,7 @@ void eratosphen(long long x) {
     /*for (int i = 2; i < x; i++) {
        if (arr[i]) cout << i << endl;
     }*/
+    delete[] arr;
 }
 
 int main()
