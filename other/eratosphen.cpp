@@ -19,6 +19,7 @@ void eratosphen(int x) {
     for (int i = 2; i < x; i++) {
         if (arr[i]) cout << arr[i] << endl;
     }
+    delete[] arr;
 }
 
 int main()
