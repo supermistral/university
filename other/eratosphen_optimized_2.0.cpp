@@ -17,6 +17,9 @@ void eratosphen(long long x) {
     for (long long i = 1; (i * 2 + 1) <= sqrtX; i++) {
         if (arr[i]) {
             temp = (i * 2 + 1);
+            // Элементы которые нужно стереть начинаются с temp*temp, а так как temp нечетный, то можно не 
+            // плюсовать просто temp, а пропускать там, где множителем temp будет четное (temp*temp; temp*(temp+2);
+            // temp*(temp+4) ...
             for (long long j = temp * temp; j <= x; j += (temp * 2)) {
                 arr[(j - 1) / 2] = false;
             }
