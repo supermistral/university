@@ -21,7 +21,7 @@ int main()
     int x, y;
     cout << "Ввод 1-ого числа -> "; cin >> x;
     cout << "Ввод 2-ого числа -> "; cin >> y;
-    cout << "НОД = " << evklid(x, y);
+    cout << "НОД = " << evklid(abs(x), abs(y));
 
     return 0;
 }
