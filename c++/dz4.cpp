@@ -23,13 +23,13 @@ float open(string file) {
 }
 
 void task1() {
-    string file = "";  // Путь к файлу
+    string file = "C:\\Users\\IVC1-5\\Desktop\\text.txt";  // Путь к файлу
     const int len = 10;
     float arr[len];
     ofstream out;
 
     for (int i = 0; i < len; i++) {
-        cout << i << ": ";
+        cout << i + 1 << ": ";
         cin >> arr[i];
     }
 
@@ -38,18 +38,21 @@ void task1() {
         for (int i = 0; i < len; i++) {
             out << arr[i] << endl;
         }
+        out.close();
+        cout << "Сумма = " << open(file) << endl;
     }
-    out.close();
+    else {
+        cout << "Ошибка открытия файла" << endl;
+    }
 
-    cout << "Сумма = " << open(file) << endl;;
 }
 
 // Функция-обработчик, задача "Знак"
-int sign(float x) {
-    int res;
-    if (x > 0) res = 1;
-    else if (x < 0) res = -1;
-    else res = 0;
+char sign(float x) {
+    char res;
+    if (x > 0) res = '+';
+    else if (x < 0) res = '-';
+    else res = '0';
     return res;
 }
 
@@ -60,7 +63,18 @@ void task2() {
 }
 
 // Функции для вычисления площадей (задача "Геом. фигуры")
+bool check(float x, float y = 1, float z = 1) {
+    if (x > 0 && y > 0 && z > 0) {
+        return true;
+    }
+    cout << "Числа должны быть положительными" << endl;
+    return false;
+}
+
 double rectangle(float x, float y) {
+    if (x == y) {
+        cout << "Это квадрат. Его площадь = ";
+    }
     return x * y;
 }
 
@@ -76,11 +90,17 @@ double circle(float r) {
 void task3() {
     float x, y, z;
     cout << "Ввод сторон прямоугольника" << endl; cin >> x >> y;
-    cout << rectangle(x, y) << endl;
+    if (check(x, y)) {
+        cout << rectangle(x, y) << endl;
+    }
     cout << "Ввод сторон треугольника" << endl; cin >> x >> y >> z;
-    cout << triangle(x, y, z) << endl;
+    if (check(x, y)) {
+        cout << triangle(x, y, z) << endl;
+    }
     cout << "Ввод радиуса круга" << endl; cin >> x;
-    cout << circle(x) << endl;
+    if (check(x)) {
+        cout << circle(x) << endl;
+    }
 }
 
 void task4() {
@@ -136,12 +156,10 @@ void task5() {
     HDC window = GetDC(GetConsoleWindow());
     HPEN obj = CreatePen(PS_SOLID, 2, RGB(255, 255, 255));
     SelectObject(window, obj);
-
     MoveToEx(window, 0, startPos, NULL);
     LineTo(window, startPos * 2, startPos);
     MoveToEx(window, startPos, 0, NULL);
     LineTo(window, startPos, startPos * 2);
-
     for (float x = -10; x <= 10; x += 0.01f) {
         MoveToEx(window, x * scaleX + startPos, sin(x) * scaleY + startPos, NULL);
         LineTo(window, x * scaleX + startPos, sin(x) * scaleY + startPos);
@@ -161,19 +179,26 @@ void task6() {
     int len = input.size();
 
     for (int i = 0; i < len - 1; i++) {
+        //Чек на правило записи: I перед V, X; X перед L, C; C перед D, M
+        if (!((tempSym == 1 || tempSym % 10 == 0) &&
+            (input[i + 1] / tempSym == 2 || input[i + 1] / tempSym == 10) ||
+            (tempSym % 10 == 5 && input[i + 1] / tempSym == 2))) {
+            result = -1;
+            break;
+        }
         //Блок проверки на более чем 3 одинаковых цифры подряд
         if (input[i + 1] == tempSym) {
             counter++;
             if (counter > 3) {
-                cout << "Неверная запись римского числа" << endl;
-                return;
+                result = -1;
+                break;
             }
         }
         else {
             //Чек на вхождение символа в словарь
             if (dig.find(input[i]) == dig.end()) {
-                cout << "Неверная запись римского числа" << endl;
-                return;
+                result = -1;
+                break;
             }
             tempSym = input[i];
             counter = 1;
@@ -186,6 +211,11 @@ void task6() {
             result += dig[input[i]];
         }
     }
+
+    if (result < 0) {
+        cout << "Неверная запись римского числа" << endl;
+        return;
+    }
     result += dig[input[len - 1]];
     cout << result << endl;
 }
@@ -196,13 +226,13 @@ double task7_helper(int m, int i, int c, int s) {
 
 void task7() {
     int s = 0, start = 0, end = 10;
-    
+
     cout << "1 вариант:" << endl;
     for (int i = start; i < end; i++) {
         s = task7_helper(37, 3, 64, s);
         cout << s << endl;
     }
-    
+
     s = 0;
     cout << "2 вариант:" << endl;
     for (int i = start; i < end; i++) {
@@ -297,15 +327,24 @@ string convert(int num, int base) {
 
 // Перевод в десятичную
 int convertToTen(string num, int base) {
+    // 0 - 9 -> 48 - 57 | A - Z -> 65 - 90
     int currentNum, newNum = 0, scale1 = 55, scale2 = 48, dig = 1;
 
     while (!num.empty()) {
         int lastSym = num[num.size() - 1];
-        if (lastSym >= scale1 + 10) {
+        if (lastSym >= scale1 + 10 && lastSym <= scale1 + 35) {
             currentNum = lastSym - scale1;
         }
-        else {
+        else if (lastSym >= scale2 && lastSym <= scale2 + 9) {
             currentNum = lastSym - scale2;
+        }
+        else {
+            cout << "Невозможно перевести введенное значение" << endl;
+            return -1;
+        }
+        if (currentNum >= base) {
+            cout << "Невозможно перевести введенное значение" << endl;
+            return -1;
         }
         newNum += currentNum * dig;
         dig *= base;
@@ -315,16 +354,23 @@ int convertToTen(string num, int base) {
 }
 
 void task9() {
-    int oldBase, newBase;
+    int oldBase, newBase, numInTen;
     string userNum, newNum;
-    cout << "Ввод числа, основания его системы счисления и основания системы счисления нового числа" << endl;
-    cin >> userNum >> oldBase >> newBase;
+    cout << "Ввод числа -> "; cin >> userNum;
+    cout << "Ввод его системы счисления -> "; cin >> oldBase;
+    cout << "Ввод целевой системы счисления -> "; cin >> newBase;
 
-    newNum = convert(convertToTen(userNum, oldBase), newBase);
-    cout << newNum << endl;
+    if (check(oldBase, newBase)) {
+        numInTen = convertToTen(userNum, oldBase);
+        if (numInTen < 0) {
+            return;
+        }
+        newNum = convert(numInTen, newBase);
+        cout << newNum << endl;
+    }
 }
 
-boolean handler(char x) {
+bool handler(char x) {
     switch (x)
     {
     case '1':
@@ -363,8 +409,8 @@ boolean handler(char x) {
 int main()
 {
     setlocale(LC_ALL, "rus");
-    
-    boolean condition = true;
+
+    bool condition = true;
     char input;
     while (condition) {
         cout << "№ Задания -> "; cin >> input;
