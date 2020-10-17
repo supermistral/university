@@ -11,12 +11,12 @@ void eratosphen(long long x) {
     vector<long> arrNums;
 
     // 1 элемент не затрагивается (это вымышленная 2), остальные - нечетные (1: 3; 2: 5; 3: 7; 4: 9 ...)
-    for (long long i = 0; i < n; i++) {
+    for (long i = 0; i < n; i++) {
         arr[i] = true;
     }
 
     long long temp;
-    for (long long i = 1; (i * 2 + 1) <= sqrtX; i++) {
+    for (long i = 1; (i * 2 + 1) <= sqrtX; i++) {
         if (arr[i]) {
             temp = (i * 2 + 1);
             // Элементы которые нужно стереть начинаются с temp*temp, а так как temp нечетный, то можно не 
@@ -45,7 +45,7 @@ int main()
     long long border;
     clock_t t;
     cout << "Введите границу -> "; cin >> border;
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 10; i++) {
         t = clock();
         eratosphen(border);
         t = clock() - t;
