@@ -29,6 +29,7 @@ bool check(vector<Points>& snake, int a);
 Points food(int a, int b);
 bool check_food(vector<Points>& snake, int a, Points b);
 int set_speed();
+bool game(int a, int b, int c, int d, int e);
 
 int main()
 {
@@ -37,7 +38,19 @@ int main()
     //system("cls")
     const int height = 26, length = 52, start_posx = 1, start_posy = 1;
     int snake_size = 4;
-    char symbols[height][length];
+
+    bool gameCondition = true;
+    while (gameCondition) {
+        gameCondition = game(height, length, start_posx, start_posy, snake_size);
+    }
+    return 0;
+}
+
+bool game(int height, int length, int start_posx, int start_posy, int snake_size) {
+    char** symbols = new char*[height];
+    for (int i = 0; i < height; i++) {
+        symbols[i] = new char[length];
+    }
 
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < length; j++) {
@@ -55,15 +68,15 @@ int main()
     //int end_posx = start_posx, end_posy = start_posy;
     for (int i = start_posx; i < start_posx + snake_size; i++) {
         symbols[start_posy][i] = '#';
-        snake.push_back({i, start_posy});
+        snake.push_back({ i, start_posy });
     }
-    
+
     int koefX = 1, koefY = 0;
     int posx, posy;
     char key;
     Points posFood = food(length, height);
     symbols[posFood.y][posFood.x] = '*';
-    
+
     int speed = set_speed();
     long score = 0;
     system("cls");
@@ -97,7 +110,7 @@ int main()
                 posy = height - 2;
             }
         }
-        
+
 
         symbols[snake[0].y][snake[0].x] = ' ';
         move(snake, snake_size);
@@ -124,12 +137,17 @@ int main()
             cout << "\n";
         }
     }
+    for (int i = 0; i < height; i++) {
+        delete[] symbols[i];
+    }
+    delete[] symbols;
 
+    char k = 'q';
     system("cls");
     cout << "Ваш счет >> " << score << "\n\n";
-    snake.clear();
-    
-    return 0;
+    cout << "Для выхода нажмите q, в случае продолжения нажмите любую другую клавишу" << "\n\n";
+    k = key_pressed();
+    return (k != 'q');
 }
 
 void move(vector<Points>& snake, int size) {
@@ -181,19 +199,19 @@ int random(int n, int mod) {
 int key_handler(char key, int mod) {
     int x = 0, y = 0;
     switch (key) {
-    case 'w':
-        y = -1;
-        break;
-    case 'a':
-        x = -1;
-        break;
-    case 's':
-        y = 1;
-        break;
-    case 'd':
-        x = 1;
-    default:
-        break;
+        case 'w':
+            y = -1;
+            break;
+        case 'a':
+            x = -1;
+            break;
+        case 's':
+            y = 1;
+            break;
+        case 'd':
+            x = 1;
+        default:
+            break;
     }
     if (mod) return y;
     return x;
