@@ -210,7 +210,6 @@ int key_handler(char key, int mod) {
             break;
         case 'd':
             x = 1;
-        default:
             break;
     }
     if (mod) return y;
