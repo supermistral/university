@@ -24,12 +24,12 @@ void setpos(int x, int y) {
 char key_pressed();
 int random(int a, int b = 0);
 int key_handler(char a, int b = 0);
-void move(vector<Points>& snake, int a);
-bool check(vector<Points>& snake, int a);
-Points food(int a, int b);
-bool check_food(vector<Points>& snake, int a, Points b);
+void move(vector<Points>& snake, int);
+bool check(vector<Points>& snake, int);
+Points food(int, int);
+bool check_food(vector<Points>& snake, int, Points);
 int set_speed();
-bool game(int a, int b, int c, int d, int e);
+bool game(int, int, int, int, int);
 
 int main()
 {
