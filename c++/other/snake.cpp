@@ -122,6 +122,8 @@ bool game(int height, int length, int start_posx, int start_posy, int snake_size
         }
 
         if (check_food(snake, snake_size, posFood)) {
+            // for gcu: #include <iterator>
+            // vector<Points>::iterator iter = snake.begin();
             auto iter = snake.cbegin();
             snake.insert(iter, snake[0]);
             ++snake_size;
