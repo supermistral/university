@@ -28,7 +28,7 @@ int gcd2(int x, int y) {
 
 bool handler(int x, int y) {
     char input;
-    cout << "Умножением - 1, вычитанием - 2 -> "; cin >> input;
+    cout << "Делением - 1, вычитанием - 2 -> "; cin >> input;
     switch (input) {
     case '1':
         cout << "НОД = " << gcd1(x, y);
