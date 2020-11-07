@@ -76,10 +76,42 @@ void task4() {
 }
 
 void task5() {
-    long long n, k, n_previous, temp;
+    long long n, k, tempMax, tempMin, prevMax, prevMin, nMax, nMin, counter;
     cin >> n >> k;
 
-    
+    prevMax = n;
+    prevMin = n;
+    nMax = 0;
+    nMin = 0;
+    counter = 1;
+
+    while (k > 0) {
+        //tempMax = prevMax / 2;
+        //tempMin = prevMin - prevMin / 2 - 1;
+        k -= counter;
+        if (k <= 0)
+            break;
+
+        tempMax = prevMax - prevMax / 2 - 1;
+        prevMax /= 2;
+
+        tempMin = prevMin / 2;
+        prevMin = prevMin - prevMin / 2 - 1;
+        
+        ++nMax;
+        ++nMin;
+
+        if (tempMax == prevMax)
+            ++nMax;
+        else
+            ++nMin;
+        if (tempMin == prevMax)
+            ++nMax;
+        else
+            ++nMin;
+        cout << "prevMax " << prevMax << "   PrevMin" << prevMin << "   nMax" << nMax << "   nMin" << nMin << endl;
+        counter *= 2;
+    }
 }
 
 int main()
