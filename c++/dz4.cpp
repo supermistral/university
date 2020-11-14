@@ -17,8 +17,8 @@ float open(string file) {
             cout << line << endl;
             sum += stof(line);
         }
+        in.close();
     }
-    in.close();
     return sum;
 }
 
@@ -50,9 +50,12 @@ void task1() {
 // Функция-обработчик, задача "Знак"
 char sign(float x) {
     char res;
-    if (x > 0) res = '+';
-    else if (x < 0) res = '-';
-    else res = '0';
+    if (x > 0) 
+        res = '+';
+    else if (x < 0) 
+        res = '-';
+    else 
+        res = '0';
     return res;
 }
 
@@ -62,7 +65,7 @@ void task2() {
     cout << sign(x) << endl;
 }
 
-// Функции для вычисления площадей (задача "Геом. фигуры")
+
 bool check(float x, float y = 1, float z = 1) {
     if (x > 0 && y > 0 && z > 0) {
         return true;
@@ -71,6 +74,7 @@ bool check(float x, float y = 1, float z = 1) {
     return false;
 }
 
+// Функции для вычисления площадей (задача "Геом. фигуры")
 double rectangle(float x, float y) {
     if (x == y) {
         cout << "Это квадрат. Его площадь = ";
@@ -94,7 +98,7 @@ void task3() {
         cout << rectangle(x, y) << endl;
     }
     cout << "Ввод сторон треугольника" << endl; cin >> x >> y >> z;
-    if (check(x, y)) {
+    if (check(x, y, z)) {
         cout << triangle(x, y, z) << endl;
     }
     cout << "Ввод радиуса круга" << endl; cin >> x;
