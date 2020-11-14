@@ -50,11 +50,11 @@ void task1() {
 // Функция-обработчик, задача "Знак"
 char sign(float x) {
     char res;
-    if (x > 0) 
+    if (x > 0)
         res = '+';
-    else if (x < 0) 
+    else if (x < 0)
         res = '-';
-    else 
+    else
         res = '0';
     return res;
 }
@@ -171,41 +171,46 @@ void task5() {
 }*/
 
 void task6() {
-    map <char, int> dig = {
+    map<char, int> dig = {
         {'I', 1}, {'V', 5}, {'X', 10},
         {'L', 50}, {'C', 100}, {'D', 500},
         {'M', 1000}
     };
     string input;
     int result = 0, counter = 1;
+    bool falseResult = false;
     cout << "Ввод римского числа -> "; cin >> input;
     char tempSym = input[0];
     int len = input.size();
 
     for (int i = 0; i < len - 1; i++) {
-        //Чек на правило записи: I перед V, X; X перед L, C; C перед D, M
-        if (!((tempSym == 1 || tempSym % 10 == 0) &&
-            (input[i + 1] / tempSym == 2 || input[i + 1] / tempSym == 10) ||
-            (tempSym % 10 == 5 && input[i + 1] / tempSym == 2))) {
-            result = -1;
-            break;
-        }
         //Блок проверки на более чем 3 одинаковых цифры подряд
         if (input[i + 1] == tempSym) {
             counter++;
             if (counter > 3) {
-                result = -1;
+                falseResult = true;
                 break;
             }
         }
         else {
             //Чек на вхождение символа в словарь
-            if (dig.find(input[i]) == dig.end()) {
-                result = -1;
+            if (dig.find(input[i]) == dig.end() || dig.find(input[i+1]) == dig.end()) {
+                falseResult = true;
                 break;
             }
             tempSym = input[i];
             counter = 1;
+        }
+        //Чек на правило записи: I перед V, X; X перед L, C; C перед D, M
+        if (
+            (dig[input[i + 1]] > dig[input[i]]) &&
+            !(
+                (dig[input[i]] == 1 || dig[input[i]] % 10 == 0) &&
+                (dig[input[i + 1]] / dig[input[i]] == 5 || dig[input[i + 1]] / dig[input[i]] == 10)
+                )
+            ) {
+            falseResult = true;
+            break;
         }
 
         if (dig[input[i]] < dig[input[i + 1]]) {
@@ -215,8 +220,7 @@ void task6() {
             result += dig[input[i]];
         }
     }
-
-    if (result < 0) {
+    if (falseResult) {
         cout << "Неверная запись римского числа" << endl;
         return;
     }
