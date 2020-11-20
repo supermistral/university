@@ -6,6 +6,7 @@
 #include <Windows.h>
 using namespace std;
 
+// Координаты точки - индексы в массиве символов
 struct Points {
     int x, y;
 };
@@ -21,14 +22,14 @@ void setpos(int x, int y) {
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
-char key_pressed();
-int random(int a, int b = 0);
-int key_handler(char a, int b = 0);
-void move(vector<Points>&, int);
-bool check(vector<Points>&, int);
-Points food(int, int);
-bool check_food(vector<Points>&, int, Points);
-int set_speed();
+char key_pressed();                                         // Символ с клавиатуры
+int random(int, int = 0);                                   // Рандомное число со смещением
+int key_handler(char, int = 0);                             // Обработчик нажатого символа (вовзращает смещения x y)
+void move(vector<Points>& snake, int);                      // Движение
+bool check(vector<Points>& snake, int);                     // Проверка на корректность движения
+Points food(int, int);                                      // Координаты еды
+bool check_food(vector<Points>& snake, int, Points);        // Проверка на взаимодействие с едой
+int set_speed();                                            // Установка скорости = задержки
 bool game(int, int, int, int, int);
 
 int main()
@@ -62,13 +63,11 @@ bool game(int height, int length, int start_posx, int start_posy, int snake_size
             }
         }
     }
-    // snake
+    // Начальное определение змеи
     vector<Points> snake;
-    //int head_posx = start_posx + snake_size - 1, head_posy = start_posy;
-    //int end_posx = start_posx, end_posy = start_posy;
-    for (int i = start_posx; i < start_posx + snake_size; i++) {
-        symbols[start_posy][i] = '#';
-        snake.push_back({ i, start_posy });
+    for (int x = start_posx; x < start_posx + snake_size; x++) {
+        symbols[start_posy][x] = '#';
+        snake.push_back({ x, start_posy });
     }
 
     int koefX = 1, koefY = 0;
@@ -89,28 +88,23 @@ bool game(int height, int length, int start_posx, int start_posy, int snake_size
             key = key_pressed();
             koefX = key_handler(key);
             koefY = key_handler(key, 1);
-            //cout << koefX << endl << koefY;
+
         }
         posx = snake[snake_size - 1].x + koefX;
         posy = snake[snake_size - 1].y + koefY;
         // Выход за границы 
         if (posx >= length - 1 || posx <= 0 ||
             posy >= height - 1 || posy <= 0) {
-            //break;
-            if (posx >= length - 1) {
-                posx = 1;
-            }
-            else if (posx <= 0) {
-                posx = length - 2;
-            }
-            else if (posy >= height - 1) {
-                posy = 1;
-            }
-            else if (posy <= 0) {
-                posy = height - 2;
-            }
-        }
 
+            if (posx >= length - 1)
+                posx = 1;
+            else if (posx <= 0)
+                posx = length - 2;
+            else if (posy >= height - 1)
+                posy = 1;
+            else if (posy <= 0)
+                posy = height - 2;
+        }
 
         symbols[snake[0].y][snake[0].x] = ' ';
         move(snake, snake_size);
@@ -120,10 +114,8 @@ bool game(int height, int length, int start_posx, int start_posy, int snake_size
         if (!check(snake, snake_size)) {
             break;
         }
-
+        // Если еда съедена, то вставка нового сегмента в начало
         if (check_food(snake, snake_size, posFood)) {
-            // for gcu: #include <iterator>
-            // vector<Points>::iterator iter = snake.begin();
             auto iter = snake.cbegin();
             snake.insert(iter, snake[0]);
             ++snake_size;
@@ -154,12 +146,8 @@ bool game(int height, int length, int start_posx, int start_posy, int snake_size
 
 void move(vector<Points>& snake, int size) {
     int posx, posy;
-    for (int i = 0; i < size - 1; i++) {
+    for (int i = 0; i < size - 1; i++)
         snake[i] = snake[i + 1];
-    }
-    /*for (int i = 0; i < size; i++) {
-        cout << snake[i].x << " " << snake[i].y << endl;
-    }*/
 }
 
 Points food(int l, int h) {
@@ -185,12 +173,16 @@ int set_speed() {
     double x;
     cout << "Установка скорости 1 - 1000 -> "; cin >> x;
     cout << "\r";
-    if (int(x) - x == 0 && x >= 1 && x <= 1000) {
-        return x;
+    if (cin.fail()) {
+        cin.clear();
+        cin.ignore(32767, '\n');
     }
     else {
-        return set_speed();
+        if (int(x) - x == 0 && x >= 1 && x <= 1000) {
+            return x;
+        }
     }
+    return set_speed();
 }
 
 int random(int n, int mod) {
@@ -212,14 +204,15 @@ int key_handler(char key, int mod) {
             break;
         case 'd':
             x = 1;
-            break;
+        default:
+            return 0;
     }
-    if (mod) return y;
+    if (mod) 
+        return y;
     return x;
 }
 
 char key_pressed() {
-    // w = 
     char key = _getch();
     return key;
 }
