@@ -26,17 +26,17 @@ int main() {
 void task1() {
 	int n = 100, key;
 	int* x = new int[n];
-
+	
 	fillRandom(x, n, 0);
 	printArray(x, n);
-
+	
 	std::cout << "Key -> "; std::cin >> key;
-
+	
 	//delFirstMetod(x, n, key);
 	delOtherMetod(x, n, key);
-
+	
 	printArray(x, n);
-
+	
 	delete[] x;
 }
 
