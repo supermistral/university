@@ -1,5 +1,4 @@
 #include <iostream>
-#include <ctime>
 #include <cstdlib>
 #include <chrono>
 
@@ -8,30 +7,29 @@ void selection_sort(int*, int);
 void exchange_sort(int*, int);
 void fill_array(int*, int);
 void print_array(int*, int);
-void fill_random_array(int*, int);
-void fill_sorted(int*, int);
+void fill_random_array(int*, int, int = 10);
+void fill_sorted(int*, int, char);
 void insertion_sort(int*, int);
 void swap(int*, int, int);
 
 int main()
 {
-	srand(static_cast<unsigned int>(time(0)));
+	srand(static_cast<unsigned int>(
+		std::chrono::system_clock::now().time_since_epoch().count()
+	));
 
-	int length;
+	int length, max;
 	std::cout << "Length = "; std::cin >> length;
+	std::cout << "Max = "; std::cin >> max;
 	int* arr = new int[length];
 
-	fill_random_array(arr, length);
-	print_array(arr, length);
+	fill_random_array(arr, length, max);
 
 	auto begin = std::chrono::steady_clock::now();
-	//exchange_sort(arr, length);
-	insertion_sort(arr, length);
+	exchange_sort(arr, length);
 	auto end = std::chrono::steady_clock::now();
-	auto total = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-	//std::cout << total.count();
-	
-	print_array(arr, length);
+	auto total = std::chrono::duration_cast<std::chrono::seconds>(end - begin);
+	//std::cout << total.count() << " s";
 
 	delete[] arr;
 	return 0;
@@ -80,12 +78,12 @@ void fill_array(int* arr, int n) {
 void print_array(int* arr, int n) {
 	for (int i = 0; i < n; ++i)
 		std::cout << arr[i] << " ";
-	std::cout << "\n";
+	std::cout << "\n\n";
 }
 
-void fill_random_array(int* arr, int n) {
+void fill_random_array(int* arr, int n, int max) {
 	for (int i = 0; i < n; ++i)
-		arr[i] = rand() % 10;
+		arr[i] = rand() % max;
 }
 
 void fill_sorted(int* arr, int n, char sym) {
