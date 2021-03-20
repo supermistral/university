@@ -37,7 +37,6 @@ int main()
 	return 0;
 }
 
-//void swap(int* arr, int i, int j) {
 void swap(int &elem1, int &elem2) {
 	int k = elem1;
 	elem1 = elem2;
