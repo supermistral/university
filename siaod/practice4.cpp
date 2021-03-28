@@ -21,10 +21,18 @@ int main()
     std::cout << "Length = "; std::cin >> length;
     int* arr = new int[length];
 
-    fill_random_array(arr, length);
-    print_array(arr, length);
-    merge_sort(arr, 0, length - 1);
-    print_array(arr, length);
+    fill_random_array(arr, length, 10);
+
+    auto begin = std::chrono::steady_clock::now();
+    //print_array(arr, length);
+    //merge_sort(arr, 0, length - 1);
+    //exchange_sort_aiverson(arr, length);
+    shaker_sort(arr, length);
+    //print_array(arr, length);
+    auto end = std::chrono::steady_clock::now();
+    auto total = std::chrono::duration_cast<std::chrono::seconds>(end - begin);
+    //std::cout << "Length = " << length << "\n";
+    std::cout << total.count() << " s";
 
     delete[] arr;
 }
@@ -37,36 +45,39 @@ void swap(int& elem1, int& elem2) {
 }
 
 void exchange_sort_aiverson(int* arr, int n) {
-    bool isSorted;
-    for (int i = 0; i < n - 1; ++i) {
-        isSorted = true;
+    long long comps = 0, moves = 0;
+    bool swapFlag = true;
+    for (int i = 0; i < n - 1 && swapFlag; ++i) {
+        swapFlag = false;
         for (int j = 0; j < n - i - 1; ++j) {
+            ++comps;
             if (arr[j] > arr[j + 1]) {
                 swap(arr[j], arr[j + 1]);
-                isSorted = false;
+                ++moves;
+                swapFlag = true;
             }
         }
-        if (isSorted)
-            break;
     }
+    std::cout << "Comps: " << comps << "\nMoves: " << moves <<
+        "\nTotal: " << comps + moves << "\n";
 }
 
 void shaker_sort(int* arr, int n) {
     int l = 0, r = n - 1;
-    bool isSorted = false;
-    while (l < r && !isSorted) {
-        isSorted = true;
+    bool swapFlag = true;
+    while (l < r && swapFlag) {
+        swapFlag = false;
         for (int i = l; i < r; ++i) {
             if (arr[i] > arr[i + 1]) {
                 swap(arr[i], arr[i + 1]);
-                isSorted = false;
+                swapFlag = true;
             }
         }
         --r;
         for (int i = r; i > l; --i) {
             if (arr[i - 1] > arr[i]) {
-                swap(arr[i], arr[i + 1]);
-                isSorted = false;
+                swap(arr[i-1], arr[i]);
+                swapFlag = true;
             }
         }
         ++l;
