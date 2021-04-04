@@ -8,8 +8,10 @@ void fill_random_array(int*, int, int = 10);
 void exchange_sort_aiverson(int*, int);
 void swap(int&, int&);
 void shaker_sort(int*, int);
-void merge_sort(int*, int, int);
-void merge(int*, int, int, int);
+//void merge_sort(int*, int, int);
+void merge_sort(int*, int, int, long long&, long long&);
+//void merge(int*, int, int, int);
+void merge(int*, int, int, int, long long&, long long&);
 
 int main()
 {
@@ -19,20 +21,23 @@ int main()
 
     int length;
     std::cout << "Length = "; std::cin >> length;
-    int* arr = new int[length];
+    int* arr = new int[length]; 
 
-    fill_random_array(arr, length, 10);
+    fill_random_array(arr, length, length);
 
     auto begin = std::chrono::steady_clock::now();
     //print_array(arr, length);
-    //merge_sort(arr, 0, length - 1);
-    //exchange_sort_aiverson(arr, length);
-    shaker_sort(arr, length);
+    //long long comps = 0, moves = 0;
+    //merge_sort(arr, 0, length - 1, comps, moves);
+    exchange_sort_aiverson(arr, length);
+    //shaker_sort(arr, length);
     //print_array(arr, length);
     auto end = std::chrono::steady_clock::now();
-    auto total = std::chrono::duration_cast<std::chrono::seconds>(end - begin);
+    auto total = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
     //std::cout << "Length = " << length << "\n";
-    std::cout << total.count() << " s";
+    std::cout << total.count() << " ms";
+    //std::cout << "Comps: " << comps << "\nMoves: " << moves <<
+    //    "\nTotal: " << comps + moves << "\n";
 
     delete[] arr;
 }
@@ -65,26 +70,35 @@ void exchange_sort_aiverson(int* arr, int n) {
 void shaker_sort(int* arr, int n) {
     int l = 0, r = n - 1;
     bool swapFlag = true;
+    long long comps = 0, moves = 0;
+
     while (l < r && swapFlag) {
         swapFlag = false;
         for (int i = l; i < r; ++i) {
+            ++comps;
             if (arr[i] > arr[i + 1]) {
                 swap(arr[i], arr[i + 1]);
                 swapFlag = true;
+                ++moves;
             }
         }
         --r;
         for (int i = r; i > l; --i) {
+            ++comps;
             if (arr[i - 1] > arr[i]) {
                 swap(arr[i-1], arr[i]);
                 swapFlag = true;
+                ++moves;
             }
         }
         ++l;
     }
+    std::cout << "Comps: " << comps << "\nMoves: " << moves <<
+        "\nTotal: " << comps + moves << "\n";
 }
 
-void merge(int* arr, int l, int k, int r) {
+//void merge(int* arr, int l, int k, int r) {
+void merge(int* arr, int l, int k, int r, long long &comps, long long &moves) {
     int n1 = k - l + 1;
     int n2 = r - k;
     int* a = new int[n1];
@@ -97,27 +111,28 @@ void merge(int* arr, int l, int k, int r) {
 
     int i = 0, j = 0, x = l;
     while (i < n1 && j < n2) {
+        ++comps; ++moves;
         if (a[i] < b[j])
             arr[x++] = a[i++];
         else
             arr[x++] = b[j++];
     }
 
-    for (; i < n1; ++i, ++x)
+    for (; i < n1; ++i, ++x, ++moves)
         arr[x] = a[i];
-    for (; j < n2; ++j, ++x)
+    for (; j < n2; ++j, ++x, ++moves)
         arr[x] = b[j];
 
     delete[] a, b;
 }
 
-void merge_sort(int* arr, int l, int r) {
+void merge_sort(int* arr, int l, int r, long long &comps, long long &moves) {
     if (l < r) {
-        int k = (r - l) / 2 + l;
-        merge_sort(arr, l, k);
-        merge_sort(arr, k + 1, r);
+        int k = (r + l) / 2;
+        merge_sort(arr, l, k, comps, moves);
+        merge_sort(arr, k + 1, r, comps, moves);
 
-        merge(arr, l, k, r);
+        merge(arr, l, k, r, comps, moves);
     }
 }
 
