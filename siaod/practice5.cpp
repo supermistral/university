@@ -22,13 +22,8 @@ struct FileHandler {
 
 	void setLengthOfInputFile() {
 		ifstream in(fileInput);
-		if (!in.is_open()) {
-			std::cout << "\nError";
-			in.close();
-			return;
-		}
-
 		string line;
+
 		while (!in.eof()) {
 			std::getline(in, line);
 			++length;
@@ -39,18 +34,11 @@ struct FileHandler {
 
 	void division(int offset) {
 		ifstream in(fileInput);
-		ofstream out1(fileOutput1);
-		ofstream out2(fileOutput2);
-
-		if (!(in.is_open() && out1.is_open() && out2.is_open())) {
-			std::cout << "\nError in files";
-			this->closeFiles(in, out1, out2);
-			return;
-		}
-
+		ofstream out1(fileOutput1), out2(fileOutput2);
 		string line;
 		bool flagWriting = true;
 		int current = 0;
+
 		while (!in.eof()) {
 			std::getline(in, line);
 			if (!isdigit(line[0]))
@@ -68,15 +56,7 @@ struct FileHandler {
 
 	void merge(int offset) {
 		ofstream out(fileInput);
-		ifstream in1(fileOutput1),
-			in2(fileOutput2);
-
-		if (!(out.is_open() && in1.is_open() && in2.is_open())) {
-			std::cout << "\nError in files";
-			this->closeFiles(out, in1, in2);
-			return;
-		}
-
+		ifstream in1(fileOutput1), in2(fileOutput2);
 		string line1, line2;
 		bool flagReading1, flagReading2;
 		int counter1, counter2;
@@ -84,6 +64,19 @@ struct FileHandler {
 		for (int i = 0; i < length / 2; i += offset) {
 			flagReading1 = flagReading2 = true;
 			counter1 = counter2 = 0;
+
+			std::getline(in1, line1);
+			std::getline(in2, line2);
+			if (std::stoi(line1) < std::stoi(line2)) {
+				out << line1;
+				flagReading2 = false;
+				flagReading1 = true;
+			}
+			else {
+				out << line2;
+				flagReading1 = false;
+				flagReading2 = true;
+			}
 
 			while (
 				counter1 < offset && counter2 < offset && 
@@ -155,7 +148,7 @@ struct FileHandler {
 	}
 
 	void generateData() {
-		srand(time(NULL));
+		srand(static_cast<unsigned int>(time(0)));
 
 		int n, max;
 		n = 100;
@@ -170,6 +163,21 @@ struct FileHandler {
 
 		output.close();
 	}
+
+	bool checkFiles() {
+		ifstream in(fileInput);
+		ofstream out1(fileOutput1);
+		ofstream out2(fileOutput2);
+
+		if (!(in.is_open() && out1.is_open() && out2.is_open())) {
+			std::cout << "\nError in files";
+			this->closeFiles(in, out1, out2);
+			return 0;
+		}
+
+		this->closeFiles(in, out1, out2);
+		return 1;
+	}
 };
 
 int main() {
@@ -179,6 +187,8 @@ int main() {
 
 	FileHandler filehandler;
 	filehandler.setFiles(fileInput, fileOutput1, fileOutput2);
+	if (!filehandler.checkFiles())
+		return -1;
 	filehandler.generateData();
 	filehandler.setLengthOfInputFile();
 	filehandler.runSort();
