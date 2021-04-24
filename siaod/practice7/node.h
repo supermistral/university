@@ -2,6 +2,15 @@
 #include <string>
 #include <iostream>
 
+struct ListKnowledgeArea;
+
+struct BookData {
+	int number, year;
+	std::string author, name;
+	ListKnowledgeArea* knowledgeArea = nullptr;
+
+	~BookData();
+};
 
 template <class T1, class T2>
 struct NodeBase {
@@ -10,13 +19,7 @@ struct NodeBase {
 	T2 data;
 };
 
-template <class T>
-struct ListBase {
-	T* head = nullptr;
-	T* last = nullptr;
-};
-
-struct Node 
+struct Node
 	: NodeBase<Node, BookData> {
 
 	Node(Node* next, Node* prev, BookData data) {
@@ -26,7 +29,7 @@ struct Node
 	};
 };
 
-struct NodeKnowledgeArea 
+struct NodeKnowledgeArea
 	: NodeBase<NodeKnowledgeArea, std::string> {
 
 	NodeKnowledgeArea(
@@ -38,58 +41,60 @@ struct NodeKnowledgeArea
 	};
 };
 
+template <class T>
+struct ListBase {
+	T* head = nullptr;
+	T* last = nullptr;
+};
+
 struct List
 	: ListBase<Node> {
-	
-	~List() {
-		deleteList<List>(*this);
-	};
+
+	~List();
 };
 
 struct ListKnowledgeArea
 	: ListBase<NodeKnowledgeArea> {
 
-	~ListKnowledgeArea() {
-		deleteList<ListKnowledgeArea>(*this);
-	};
-};
-
-struct BookData {
-	int number, year;
-	std::string author, name;
-	ListKnowledgeArea knowledgeArea;
+	~ListKnowledgeArea();
 };
 
 
-std::ostream& operator<< (std::ostream& out, const BookData& data) {
-	out << data.number;
-}
-
-std::istream& operator>> (std::istream& in, BookData& data) {
-	in >> data.number >> data.author >> data.name >> data.year;
-}
-
-bool operator== (const BookData& data1, const BookData& data2) {
-	return data1.author == data2.author && data1.name == data2.name
-		&& data1.year == data1.year;
-}
-
-template <class T = Node>
-void printFromLeftToRight(T*);
-
-template <class T = Node>
-void printFromRightToLeft(T*);
+std::ostream& operator<< (std::ostream&, const BookData&);
+std::istream& operator>> (std::istream&, BookData&);
+bool operator== (const BookData&, const BookData&);
 
 Node* searchNode(Node*, BookData);
 
-template <class T1 = Node, class T2 = List, class T3 = BookData>
-void pushBack(T2&, T3);
-
-template<class T1>
-void deleteList(T1&);
-
-ListKnowledgeArea createListKnoweldgeArea(Node*);
+ListKnowledgeArea* createListKnowledgeArea(Node*);
 void removeNodes(Node*, std::string, std::string);
 void moveNodes(List&, int);
 void deleteNode(Node*&);
-List createList(int&);
+List* createList(int&);
+
+
+template <class T = Node>
+void printFromLeftToRight(T* head) {
+	std::cout << "List: " << head->data;
+	for (T* temp = head->next; temp; temp = temp->next)
+		std::cout << " -> " << temp->data;
+	std::cout << "\n";
+}
+
+template <class T = Node>
+void printFromRightToLeft(T* last) {
+	std::cout << "List: " << last->data;
+	for (T* temp = last->prev; temp; temp = temp->prev)
+		std::cout << " -> " << temp->data;
+	std::cout << "\n";
+}
+
+template <class T1 = Node, class T2 = List, class T3 = BookData>
+void pushBack(T2*& list, T3 data) {
+	T1* newNode = new T1(nullptr, list->last, data);
+	if (!list->last)
+		list->head = newNode;
+	else
+		list->last->next = newNode;
+	list->last = newNode;
+}
