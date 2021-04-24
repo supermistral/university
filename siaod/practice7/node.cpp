@@ -1,17 +1,42 @@
 #include "node.h"
-#include <iostream>
 #include <set>
+#include <iostream>
 
-template <class T>
-void printFromLeftToRight(T* head) {
-	for (T* temp = head; temp; temp = temp->next)
-		std::cout << temp->data << " ";
+
+std::ostream& operator<< (std::ostream& out, const BookData& data) {
+	out << data.number;
+	return out;
 }
 
-template <class T>
-void printFromRightToLeft(T* last) {
-	for (T* temp = last; temp; temp = temp->prev)
-		std::cout << temp->data << " ";
+std::istream& operator>> (std::istream& in, BookData& data) {
+	in >> data.number >> data.author >> data.name >> data.year;
+	return in;
+}
+
+bool operator== (const BookData& data1, const BookData& data2) {
+	return data1.author == data2.author && data1.name == data2.name
+		&& data1.year == data1.year;
+}
+
+
+List::~List() {
+	while (head) {
+		last = head->next;
+		delete head;
+		head = last;
+	}
+}
+
+ListKnowledgeArea::~ListKnowledgeArea() {
+	while (head) {
+		last = head->next;
+		delete head;
+		head = last;
+	}
+}
+
+BookData::~BookData() {
+	delete knowledgeArea;
 }
 
 Node* searchNode(Node* head, BookData data) {
@@ -22,33 +47,13 @@ Node* searchNode(Node* head, BookData data) {
 	return nullptr;
 }
 
-template <class T1, class T2, class T3>
-void pushBack(T2& list, T3 data) {
-	T1* newNode = new T1(nullptr, list.last, data);
-	if (!list.head) {
-		list.head = newNode;
-		return;
-	}
-	list.last->next = newNode;
-	list.last = newNode;
-}
-
-template<class T1>
-void deleteList(T1& list) {
-	while (list.head) {
-		list.last = list.head->next;
-		delete list.head;
-		list.head = list.last;
-	}
-}
-
-ListKnowledgeArea createListKnowledgeArea(Node* head) {
-	ListKnowledgeArea listArea;
+ListKnowledgeArea* createListKnowledgeArea(Node* head) {
+	ListKnowledgeArea* listArea = new ListKnowledgeArea;
 	std::set<std::string> names;
 
 	for (Node* temp = head; temp; temp = temp->next) {
 		for (
-			NodeKnowledgeArea* headArea = temp->data.knowledgeArea.head;
+			NodeKnowledgeArea* headArea = temp->data.knowledgeArea->head;
 			headArea;
 			headArea = headArea->next
 		) {
@@ -70,8 +75,8 @@ void deleteNode(Node*& node) {
 		node->prev->next = nullptr;
 	}
 	else {
-		node->next->prev = nullptr;
-		node->prev->next = nullptr;
+		node->next->prev = node->prev;
+		node->prev->next = node->next;
 	}
 	delete node;
 }
@@ -98,10 +103,14 @@ void moveNodes(List& list, int id) {
 	}
 }
 
-List createList(int& size) {
+List* createList(int& size) {
 	BookData data;
+	List* list = new List;
 	std::cout << "List size = "; std::cin >> size;
+	std::cout << "For every book: id author name year\n";
 	for (int i = 0; i < size; ++i) {
 		std::cin >> data;
+		pushBack(list, data);
 	}
+	return list;
 }
