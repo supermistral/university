@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cmath>
 
-const int ARR_SIZE = 6;
+const int ARR_SIZE = 55;
 
 void fillArray(int*);
 int funcByPattern(int*, int);
