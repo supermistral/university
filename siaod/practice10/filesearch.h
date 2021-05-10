@@ -1,36 +1,65 @@
-// main.cpp
-#include <ctime>
-#include "filesearch.h"
-#include <chrono>
+// filesearch.h
+#pragma once
+#include <vector>
+#include <string>
+#include <iostream>
 
+typedef std::vector<std::string> string_arr;
 
-int main()
-{
-    srand(static_cast<unsigned int>(time(0)));
+class FileSearch {
+    int         numberOfRecords = 10;
+    std::string file;
 
-    std::string fileName = "D:\\forwork\\siaod10\\input.bin",
-        fileStationsName = "D:\\forwork\\siaod10\\stations.txt";
-    const int keyRangeMin = 1,      // нижняя граница диапазона ключа
-        keyRangeMax = 100000;       // верхняя граница
+public:
+    struct Record {
+        struct Date {
+            short day, month, year,
+                hour, minute;
 
-    FileSearch fileObj(fileName);
-    if (!fileObj.checkFile())
-        return -2;
-    fileObj.generate(keyRangeMin, keyRangeMax, fileStationsName);
-    //fileObj.printFile();
+            Date();
+            std::string getString();
+        };
 
-    int key;
-    std::cout << "Key to search = "; std::cin >> key;
-    //auto begin = std::chrono::steady_clock::now();
-    //fileObj.runSearchLinear(key);
-    fileObj.runSearchBinary(key);
-    //auto end = std::chrono::steady_clock::now();
-    //auto total = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-    //std::cout << "\n" << total.count() << " mcs\n";
+        int     number;
+        char    stationDep[21],
+                stationDest[21],
+                date[16];
 
-    //auto begin = std::chrono::steady_clock::now();
-    //fileObj.runSearchLinear(key);
-    //auto end = std::chrono::steady_clock::now();
-    //auto total = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-    //std::cout << "\n" << total.count() << " mcs";
-}
+        Record() {};
+        Record(int, string_arr);
+
+        friend std::ostream& operator<< (std::ostream&, const Record&);
+    };
+
+    struct TableNode {
+        int key,
+            refToRecord;
+        TableNode() {};
+        TableNode(int key, int ref)
+            : key(key), refToRecord(ref) {};
+    };
+
+    struct Table {
+        TableNode* table;
+        int size;
+
+        Table(Record*, int);
+        ~Table();
+
+        void quickSort(int, int);
+    };
+
+    FileSearch(std::string);
+
+    void generate(int, int, std::string);
+    void printFile();
+    bool checkFile();
+    Record* getRecords();
+
+    Record searchLinear(int);
+    void runSearchLinear(int);
+
+    int searchBinary(int, Table&);
+    Record getRecordFromRef(int);
+    void runSearchBinary(int);
+};
