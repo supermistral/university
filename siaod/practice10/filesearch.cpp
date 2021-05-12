@@ -216,11 +216,10 @@ void FileSearch::runSearchBinary(int key) {
     //auto total = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
     //std::cout << total.count() << " mcs\n";
     
-    if (ref < 0) {
+    if (ref < 0)
         std::cout << "Record wasn't found";
-        return;
-    }
-    //std::cout << this->getRecordFromRef(ref);
+    //else
+    //  std::cout << this->getRecordFromRef(ref);
 
     delete[] records;
 }
