@@ -205,7 +205,7 @@ class Parser:
 
         for req_key in self.requirements:
             for package in self.requirements[req_key]:
-                code += f'"{req_key}" -> "{package}\n'
+                code += f'"{req_key}" -> "{package}"\n'
 
         return "digraph G {\n" + code + "}"
 
