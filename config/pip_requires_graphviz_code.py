@@ -63,7 +63,7 @@ class Parser:
         return None
 
 
-    def parse_archive(self, current_package: str, extra_req: list = []) -> None:
+    def parse_archive(self, current_package: str) -> None:
         json = self.get_json(current_package)
         
         if json is None:
