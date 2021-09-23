@@ -1,11 +1,11 @@
 #include <iostream>
 #include <string>
 #include <ctime>
-#define SIZE 13
+#define SIZE 10
 
 template <class T>
-T generateKey() {       // Генерация ключа в диапазоне 10^7 - (10^8 - 1) 
-    return (double)rand() / (RAND_MAX + 1) * 8999999 + 1000000;
+T generateKey() {       // Генерация ключа в диапазоне 10^12 - (10^13 - 1) 
+    return (double)rand() / (RAND_MAX + 1) * 899999999 + 100000000;
 }
 
 
@@ -60,9 +60,9 @@ struct LinkedList {
         head = newNode;
     }
 
-    Node<T1, T2>* searchNode(T1 key) {
-        for (Node<T1, T2>* temp = head; temp; temp = temp->next) {
-            if (temp->key == key) {
+    Node<T1, T2>** searchNode(T1 key) {
+        for (Node<T1, T2>** temp = &head; *temp; *temp = (*temp)->next) {
+            if ((*temp)->key == key) {
                 return temp;
             }
         }
@@ -89,17 +89,17 @@ struct LinkedList {
 
 template<class Tkey, class Tval>
 struct Hashmap {
-    LinkedList<Tkey, Tval> **items;      // указатель на массив указателей на структуру с данными
+    LinkedList<Tkey, Tval>** items;     // указатель на массив указателей на структуру с данными
     int currentSize = 0;                // текущее кол-во элементов
     int maxSize = SIZE;                 // размер таблицы
 
-    Hashmap() {
-        items = new LinkedList<Tkey, Tval>*[SIZE];
+    Hashmap(int size = SIZE) {
+        items = new LinkedList<Tkey, Tval>*[size];
 
-        for (int i = 0; i < SIZE; ++i) {        // обнуление указателей
+        for (int i = 0; i < size; ++i) {        // обнуление указателей
             items[i] = nullptr;
         }
-        for (int i = 0; i < SIZE; ++i) {        // генерация значений
+        for (int i = 0; i < size; ++i) {        // генерация значений
             Tkey key = generateKey<Tkey>();
             Tval value;
 
@@ -108,7 +108,7 @@ struct Hashmap {
     }
 
     ~Hashmap() {
-        for (int i = 0; i < SIZE; ++i) {
+        for (int i = 0; i < maxSize; ++i) {
             delete items[i];
         }
         delete[] items;
@@ -118,9 +118,9 @@ struct Hashmap {
     void add(Tkey key, Tval value) {
         ++currentSize;
 
-        //if (this->rehashingCondition()) {
-        //    this->rehashing();
-        //}
+        if (this->rehashingCondition()) {
+            this->rehashing();
+        }
 
         int keyInHashmap = this->hash(key);
 
@@ -129,11 +129,38 @@ struct Hashmap {
         }
 
         items[keyInHashmap]->addNode(key, value);
-        
+
     }
 
     void rehashing() {
+        this->print();
+        maxSize *= 2;
+        LinkedList<Tkey, Tval>** newItems = new LinkedList<Tkey, Tval>*[maxSize];
 
+        for (int i = 0; i < maxSize; ++i) {
+            newItems[i] = nullptr;
+        }
+
+        int keyInHashmap;
+
+        for (int i = 0; i < maxSize / 2; ++i) {
+            if (items[i]) {
+                for (Node<Tkey, Tval>* node = items[i]->head; node; node = node->next) {
+                    keyInHashmap = this->hash(node->key);
+                    if (!newItems[keyInHashmap]) {
+                        newItems[keyInHashmap] = new LinkedList<Tkey, Tval>();
+                    }
+                    newItems[keyInHashmap]->addNode(node->key, node->value);
+                }
+            }
+            delete items[i];
+        }
+
+        delete[] items;
+        items = newItems;
+
+        std::cout << "\n[REHASHING]";
+        this->print();
     }
 
     // Поиск по ключу с возвратом элемента
@@ -152,7 +179,7 @@ struct Hashmap {
             items[keyInHashmap]->removeNode(key);
         }
     }
-    
+
     // Хеш-функция 
     int hash(Tkey key) {
         return key % maxSize;
@@ -164,7 +191,7 @@ struct Hashmap {
 
     // Вывод таблицы
     void print() {
-        for (int i = 0; i < SIZE; ++i) {
+        for (int i = 0; i < maxSize; ++i) {
             if (items[i] != nullptr) {
                 std::cout << "\n" << i << " | " << *items[i];
             }
@@ -207,19 +234,19 @@ int main()
 {
     srand(static_cast<unsigned>(time(0)));
 
-    Hashmap<int, HashmapItemData> map;
+    Hashmap<long, HashmapItemData> map(25);
     map.print();
 
-    int key;
+    long key;
     std::cout << "\n\nKey to remove >> ";
     std::cin >> key;
-    
-    Node<int, HashmapItemData> *&item = *map.search(key);
+
+    Node<long, HashmapItemData>** item = map.search(key);
     if (item) {
-        std::cout << *item << " | Address " << item << "\nRemoving...\n";
+        std::cout << **item << " | Address " << *item << "\nRemoving...\n";
         map.remove(key);
-        std::cout << "Address " << item;
+        std::cout << "Address " << **item;
     }
-    
+
     return 0;
 }
