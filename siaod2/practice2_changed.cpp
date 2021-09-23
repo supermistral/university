@@ -94,6 +94,7 @@ struct Hashmap {
     int maxSize = SIZE;                 // размер таблицы
 
     Hashmap(int size = SIZE) {
+        maxSize = size;
         items = new LinkedList<Tkey, Tval>*[size];
 
         for (int i = 0; i < size; ++i) {        // обнуление указателей
