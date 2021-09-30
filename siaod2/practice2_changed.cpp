@@ -1,11 +1,13 @@
 #include <iostream>
 #include <string>
 #include <ctime>
-#define SIZE 10
+#define MAX_SIZE 1000000000000
+#define MIN_SIZE 100000000000
+
 
 template <class T>
-T generateKey() {       // Генерация ключа в диапазоне 10^12 - (10^13 - 1) 
-    return (double)rand() / (RAND_MAX + 1) * 899999999 + 100000000;
+T generateKey() {       // Генерация ключа в диапазоне 10^11 - (10^12 - 1) 
+    return (double)rand() / (RAND_MAX + 1) * (MAX_SIZE - MIN_SIZE) + MIN_SIZE;
 }
 
 
@@ -40,7 +42,7 @@ struct Node {
 
 template<class T1, class T2>
 struct LinkedList {
-    Node<T1, T2>* head = nullptr;
+    Node<T1, T2>* head = nullptr;       // первый в списке
 
     ~LinkedList() {
         Node<T1, T2>* next = nullptr;
@@ -52,31 +54,38 @@ struct LinkedList {
         }
     }
 
+    // Добавление узла
     void addNode(T1 key, T2 value) {
         Node<T1, T2>* newNode = new Node<T1, T2>;
         newNode->key = key;
         newNode->value = value;
-        newNode->next = head;
+        newNode->next = head;       // вставка в начало
         head = newNode;
     }
 
-    Node<T1, T2>** searchNode(T1 key) {
-        for (Node<T1, T2>** temp = &head; *temp; *temp = (*temp)->next) {
-            if ((*temp)->key == key) {
+    // Поиск узла
+    Node<T1, T2>* searchNode(T1 key) {
+        for (Node<T1, T2>* temp = head; temp; temp = temp->next) {
+            if (temp->key == key) {
                 return temp;
             }
         }
         return nullptr;
     }
 
+    // Удаление узла
     void removeNode(T1 key) {
-        for (Node<T1, T2>* curr = head, *prev = nullptr; curr; prev = curr, curr = curr->next) {
+        for (
+            Node<T1, T2>* curr = head, *prev = nullptr; 
+            curr; 
+            prev = curr, curr = curr->next
+        ) {
             if (curr->key == key) {
-                if (curr == head) {
-                    head = head->next;
+                if (curr == head) {     // если удалить первый в списке
+                    head = head->next;  // то первому присвоить следующий за ним
                 }
-                else {
-                    prev->next = curr->next;
+                else {                          // иначе установить связь между
+                    prev->next = curr->next;    // предыдущим и следующим
                 }
                 delete curr;
                 curr = nullptr;
@@ -89,13 +98,13 @@ struct LinkedList {
 
 template<class Tkey, class Tval>
 struct Hashmap {
-    LinkedList<Tkey, Tval>** items;     // указатель на массив указателей на структуру с данными
+    LinkedList<Tkey, Tval>** items;     // указатель на массив указателей на списки
     int currentSize = 0;                // текущее кол-во элементов
-    int maxSize = SIZE;                 // размер таблицы
+    int maxSize;                        // размер таблицы
 
-    Hashmap(int size = SIZE) {
+    Hashmap(int size) {
         maxSize = size;
-        items = new LinkedList<Tkey, Tval>*[size];
+        items = new LinkedList<Tkey, Tval> * [size];
 
         for (int i = 0; i < size; ++i) {        // обнуление указателей
             items[i] = nullptr;
@@ -130,13 +139,12 @@ struct Hashmap {
         }
 
         items[keyInHashmap]->addNode(key, value);
-
     }
 
+    // Рехеширование
     void rehashing() {
-        this->print();
-        maxSize *= 2;
-        LinkedList<Tkey, Tval>** newItems = new LinkedList<Tkey, Tval>*[maxSize];
+        maxSize *= 2;           // новая таблица в 2 раза больше
+        LinkedList<Tkey, Tval>** newItems = new LinkedList<Tkey, Tval> * [maxSize];
 
         for (int i = 0; i < maxSize; ++i) {
             newItems[i] = nullptr;
@@ -144,11 +152,11 @@ struct Hashmap {
 
         int keyInHashmap;
 
-        for (int i = 0; i < maxSize / 2; ++i) {
+        for (int i = 0; i < maxSize / 2; ++i) { // итерация по всем элементам до операции
             if (items[i]) {
                 for (Node<Tkey, Tval>* node = items[i]->head; node; node = node->next) {
-                    keyInHashmap = this->hash(node->key);
-                    if (!newItems[keyInHashmap]) {
+                    keyInHashmap = this->hash(node->key);       // пересчет хеша и добавление
+                    if (!newItems[keyInHashmap]) {              // в новую таблицу
                         newItems[keyInHashmap] = new LinkedList<Tkey, Tval>();
                     }
                     newItems[keyInHashmap]->addNode(node->key, node->value);
@@ -158,14 +166,11 @@ struct Hashmap {
         }
 
         delete[] items;
-        items = newItems;
-
-        std::cout << "\n[REHASHING]";
-        this->print();
+        items = newItems;       // переприсвоение таблицы
     }
 
     // Поиск по ключу с возвратом элемента
-    Node<Tkey, Tval>** search(Tkey key) {
+    Node<Tkey, Tval>* search(Tkey key) {
         int keyInHashmap = this->hash(key);
         if (items[keyInHashmap]) {
             return items[keyInHashmap]->searchNode(key);
@@ -186,15 +191,16 @@ struct Hashmap {
         return key % maxSize;
     }
 
+    // Коэффициент нагрузки
     bool rehashingCondition() {
-        return (currentSize / maxSize) > 0.75;
+        return (double)currentSize / maxSize > 0.75;
     }
 
     // Вывод таблицы
     void print() {
         for (int i = 0; i < maxSize; ++i) {
             if (items[i] != nullptr) {
-                std::cout << "\n" << i << " | " << *items[i];
+                std::cout << i << " | " << *items[i] << "\n";
             }
         }
     }
@@ -231,23 +237,70 @@ std::ostream& operator<< (std::ostream& out, const LinkedList<T1, T2>& item) {
 }
 
 
+void task() {
+    std::string command;
+    long long key;
+    Hashmap<long long, HashmapItemData> *map = nullptr;
+
+    std::cout << "Work with hashmap\n---------\n"
+        << "gen <size>\n"
+        << "add <number> <author> <name>\n"
+        << "del <number>\n"
+        << "search <number>\n"
+        << "print\n"
+        << "exit\n"
+        << "---------\n";
+
+    while (1) {
+        std::cin >> command;
+        if (command == "gen") {
+            int size;
+            std::cin >> size;
+            delete map;
+            map = new Hashmap<long long, HashmapItemData>(size);
+        }
+        else if (command == "exit") {
+            break;
+        }
+        else if (map) {
+            if (command == "add") {
+                HashmapItemData data;
+                std::cin >> key >> data;
+                map->add(key, data);
+            }
+            else if (command == "del") {
+                std::cin >> key;
+                map->remove(key);
+            }
+            else if (command == "search") {
+                std::cin >> key;
+                Node<long long, HashmapItemData>* node = map->search(key);
+                if (node) {
+                    std::cout << "Found: " << *node << "\n";
+                }
+                else {
+                    std::cout << "Not found\n";
+                }
+            }
+            else if (command == "print") {
+                map->print();
+            }
+        }
+        else {
+            std::cout << "Wrong command\n";
+        }
+        std::cout << "\n";
+    }
+
+    delete map;
+}
+
+
 int main()
 {
     srand(static_cast<unsigned>(time(0)));
 
-    Hashmap<long, HashmapItemData> map(25);
-    map.print();
-
-    long key;
-    std::cout << "\n\nKey to remove >> ";
-    std::cin >> key;
-
-    Node<long, HashmapItemData>** item = map.search(key);
-    if (item) {
-        std::cout << **item << " | Address " << *item << "\nRemoving...\n";
-        map.remove(key);
-        std::cout << "Address " << **item;
-    }
+    task();
 
     return 0;
 }
